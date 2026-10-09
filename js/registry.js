@@ -26,7 +26,7 @@
           encodings: [
             {
               id: 'knapsack-bits',
-              ready: false,
+              ready: true,
               name: { es: 'Vector de bits', en: 'Bit vector' },
               summary: {
                 es: 'Un bit por objeto: 1 si entra en la mochila. Si no cabe, hay que penalizar, reparar o decodificar.',

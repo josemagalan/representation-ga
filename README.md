@@ -38,7 +38,7 @@ It opens the series formed by [Selection](https://github.com/josemagalan/selecti
 
 ## Status
 
-In development. The skeleton, catalogue and tests are in place; the problems will be added one by one, starting with the knapsack.
+In development. Available: the 0/1 knapsack with binary encoding (step by step through the five stages, the five ways of handling infeasibility side by side, and the Learn more panel). The other problems, practice mode, the comparison of encodings and the Moodle question banks will follow.
 
 ## Features
 

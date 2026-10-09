@@ -38,6 +38,167 @@
       </p>
     </main>
 
+    <main id="encView" hidden>
+      <header class="op-head">
+        <a class="back" href="#" id="backLink"><span aria-hidden="true">←</span> <span data-i18n="allEncodings">Todas las representaciones</span></a>
+        <p class="eyebrow" id="encEyebrow"></p>
+        <h1 id="encTitle"></h1>
+        <p class="subtitle" id="encSubtitle"></p>
+      </header>
+
+      <section class="card controls" aria-labelledby="controls-title">
+        <h2 id="controls-title" class="sr-only">Controles</h2>
+        <div class="control-row">
+          <div class="field">
+            <label for="nItems" data-i18n="nItems">Objetos</label>
+            <div class="range-wrap">
+              <input type="range" id="nItems" min="5" max="12" step="1" value="8">
+              <output id="nItemsOut" for="nItems">8</output>
+            </div>
+          </div>
+          <div class="field">
+            <label for="seed" data-i18n="seed">Semilla</label>
+            <input type="number" id="seed" min="0" max="999999" step="1" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="capacity" data-i18n="capacity">Capacidad W</label>
+            <div class="range-wrap">
+              <input type="range" id="capacity" min="1" max="40" step="1" value="20">
+              <output id="capacityOut" for="capacity">20</output>
+            </div>
+          </div>
+          <div class="field">
+            <label for="variant" data-i18n="treatment">Tratamiento de la infactibilidad</label>
+            <select id="variant"></select>
+          </div>
+          <div class="field" id="lambdaField">
+            <label for="lambda" data-i18n="lambda">λ</label>
+            <div class="range-wrap">
+              <input type="range" id="lambda" min="0" max="5" step="0.1" value="1">
+              <output id="lambdaOut" for="lambda">1</output>
+            </div>
+          </div>
+          <div class="buttons">
+            <button type="button" id="btnInstance" class="btn primary" data-i18n="randomInstance">Instancia aleatoria</button>
+            <button type="button" id="btnChromosome" class="btn" data-i18n="randomChromosome">Cromosoma aleatorio</button>
+            <button type="button" id="btnDraw" class="btn" data-i18n="drawAgain" hidden>Sortear de nuevo</button>
+          </div>
+        </div>
+        <p id="variantDesc" class="hint variant-desc"></p>
+        <p id="rhoHint" class="hint variant-desc"></p>
+        <details id="manual">
+          <summary data-i18n="manualData">Introducir los datos a mano</summary>
+          <form id="manualForm" class="manual-form" novalidate>
+            <p class="hint" data-i18n="manualHint"></p>
+            <div class="manual-grid">
+              <label for="inW" data-i18n="manualWeights">Pesos w</label>
+              <input type="text" id="inW" autocomplete="off" spellcheck="false">
+              <label for="inV" data-i18n="manualValues">Valores v</label>
+              <input type="text" id="inV" autocomplete="off" spellcheck="false">
+              <label for="inCap" data-i18n="manualCapacity">Capacidad W</label>
+              <input type="text" id="inCap" autocomplete="off" spellcheck="false" inputmode="numeric">
+              <label for="inX" data-i18n="manualChromosome">Cromosoma x</label>
+              <input type="text" id="inX" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="manual-actions">
+              <button type="submit" class="btn primary" data-i18n="apply">Aplicar</button>
+              <p id="err" class="error" role="alert"></p>
+            </div>
+          </form>
+        </details>
+      </section>
+
+      <section class="card stage">
+        <ol class="stage-strip" id="stageStrip" data-i18n-aria="stagesLabel" aria-label="Etapas"></ol>
+        <div class="formula" id="formulaCard">
+          <div class="formula-rows" id="formulaRows"></div>
+          <p class="hint formula-instance" id="formulaInstance"></p>
+        </div>
+        <div class="viz-scroll">
+          <svg id="viz" role="img" aria-labelledby="vizLabel">
+            <title id="vizLabel"></title>
+          </svg>
+        </div>
+        <p class="hint drag-hint" id="editHint" data-i18n="editHint"></p>
+
+        <div class="player" id="playerBox">
+          <div class="player-buttons">
+            <button type="button" class="icon-btn" id="btnReset" data-i18n-title="reset" title="Inicio">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg>
+            </button>
+            <button type="button" class="icon-btn" id="btnPrev" data-i18n-title="prev" title="Anterior">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5v14L6 12z"/></svg>
+            </button>
+            <button type="button" class="icon-btn play" id="btnPlay" data-i18n-title="play" title="Reproducir">
+              <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
+              <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+            <button type="button" class="icon-btn" id="btnNext" data-i18n-title="next" title="Siguiente">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5v14l11-7z"/></svg>
+            </button>
+          </div>
+          <div class="progress">
+            <span id="stepCounter" class="counter">Paso 1 de 1</span>
+            <div class="bar"><div id="barFill" class="bar-fill"></div></div>
+          </div>
+          <div class="field speed">
+            <label for="speed" data-i18n="speed">Velocidad</label>
+            <input type="range" id="speed" min="0.5" max="2.5" step="0.25" value="1">
+            <output id="speedOut" for="speed">1×</output>
+          </div>
+        </div>
+        <div class="narration" id="narrationBox" aria-live="polite">
+          <p id="narration"></p>
+        </div>
+        <ul class="legend" id="legend"></ul>
+      </section>
+
+      <section class="card" aria-labelledby="treat-title">
+        <h2 id="treat-title" class="learn-title" data-i18n="compareTitle">Los cinco tratamientos sobre este cromosoma</h2>
+        <p class="hint" data-i18n="compareNote"></p>
+        <div class="table-scroll"><table id="treatTable" class="cmp-table treat-table"></table></div>
+      </section>
+
+      <section class="card learn" aria-labelledby="learn-title">
+        <h2 id="learn-title" class="learn-title" data-i18n="learnTitle">Para saber más</h2>
+        <div class="tabs" role="tablist" aria-labelledby="learn-title">
+          <button type="button" role="tab" id="tab-explain" aria-controls="panel-explain" aria-selected="true" data-i18n="tabExplain">Explicación</button>
+          <button type="button" role="tab" id="tab-code" aria-controls="panel-code" aria-selected="false" tabindex="-1" data-i18n="tabCode">Pseudocódigo y código</button>
+          <button type="button" role="tab" id="tab-refs" aria-controls="panel-refs" aria-selected="false" tabindex="-1" data-i18n="tabRefs">Referencias</button>
+        </div>
+        <div role="tabpanel" id="panel-explain" aria-labelledby="tab-explain" class="panel" tabindex="0">
+          <div id="explainBody" class="prose"></div>
+        </div>
+        <div role="tabpanel" id="panel-code" aria-labelledby="tab-code" class="panel" hidden>
+          <div class="code-toolbar">
+            <div class="seg" role="group" data-i18n-aria="codeLang" aria-label="Lenguaje">
+              <button type="button" data-code="pseudo" aria-pressed="true" data-i18n="codePseudo">Pseudocódigo</button>
+              <button type="button" data-code="python" aria-pressed="false">Python</button>
+              <button type="button" data-code="javascript" aria-pressed="false">JavaScript</button>
+            </div>
+            <label id="syncWrap" class="sync">
+              <input type="checkbox" id="syncToggle" checked>
+              <span data-i18n="syncLabel">Resaltar el paso actual</span>
+            </label>
+            <div class="code-actions">
+              <span id="copyStatus" class="copy-status" role="status" aria-live="polite"></span>
+              <button type="button" id="btnCopy" class="btn" data-i18n="copyBtn">Copiar</button>
+              <button type="button" id="btnDownload" class="btn">Descargar</button>
+            </div>
+          </div>
+          <p id="codeHint" class="hint code-hint"></p>
+          <pre id="codeBlock" class="code" tabindex="0"></pre>
+        </div>
+        <div role="tabpanel" id="panel-refs" aria-labelledby="tab-refs" class="panel" hidden tabindex="0">
+          <p class="hint" data-i18n="refsIntro">Fuente original, referencias básicas del curso y lecturas recomendadas.</p>
+          <ol id="refList" class="refs"></ol>
+        </div>
+      </section>
+      <footer class="foot">
+        <p class="hint" data-i18n="keysHint">← → avanzar/retroceder · Espacio reproducir/pausa</p>
+      </footer>
+    </main>
+
     <main id="aboutView" hidden>
       <a class="back" href="#" id="aboutBack"><span aria-hidden="true">←</span> <span data-i18n="allEncodings">Todas las representaciones</span></a>
       <article class="card about" id="aboutBody"></article>
@@ -51,7 +212,11 @@
   <script src="js/registry.js"></script>
   <script src="js/cities.js"></script>
   <script src="js/viz/route-map.js"></script>
+  <script src="js/problems/knapsack-bits.js"></script>
+  <script src="js/viz/knapsack-view.js"></script>
   <script src="js/content/common.js"></script>
+  <script src="js/content/knapsack-bits.js"></script>
+  <script src="js/learn.js"></script>
   <script src="js/about.js"></script>
   <script src="js/home.js"></script>
   <script src="js/app.js"></script>

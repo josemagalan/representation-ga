@@ -994,3 +994,94 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 .problem-name { margin: 14px 0 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .series-links { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin-left: 6px; }
 .about-sisters { margin: 0 0 8px; padding-left: 1.2em; line-height: 1.7; }
+
+/* ---------- Página de una codificación: etapas, formalización y mochila ---------- */
+.stage-strip { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.stage-btn {
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px 6px 6px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--card); color: var(--muted); font: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.stage-btn:hover { color: var(--ink); border-color: var(--muted); }
+.stage-num {
+  display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--band); color: var(--ink); font-size: 0.78rem; font-weight: 700;
+}
+.stage-btn.done .stage-num { background: color-mix(in srgb, var(--accent) 25%, var(--card)); }
+.stage-btn.current { color: var(--ink); border-color: var(--ink); font-weight: 600; }
+.stage-btn.current .stage-num { background: var(--accent); color: var(--accent-ink); }
+
+.formula { margin: 0 0 10px; padding: 12px 14px; border-radius: 12px; background: var(--band); }
+.formula-rows { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; align-items: center; }
+.formula-row { display: contents; }
+.formula-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+.formula-math { font-size: 1.15rem; padding: 3px 8px; border-radius: 8px; border: 2px solid transparent; transition: opacity 0.25s, border-color 0.2s, background 0.2s; justify-self: start; }
+.formula-math math { font-size: 1.1em; }
+.formula-row.pending .formula-label, .formula-row.pending .formula-math { opacity: 0.25; }
+.formula-row.current .formula-label { color: var(--ink); }
+.formula-row.current .formula-math { border-color: var(--accent); background: var(--card); }
+.formula-instance { margin-top: 8px; }
+
+#viz { width: 100%; height: auto; display: block; overflow: visible; }
+.row-label { fill: var(--muted); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; transition: opacity 0.25s; }
+
+.item .item-rect { fill: var(--card); stroke: var(--line); stroke-width: 2; transition: fill 0.25s, stroke 0.25s, opacity 0.25s; }
+.item text { text-anchor: middle; fill: var(--ink); font-variant-numeric: tabular-nums; pointer-events: none; }
+.item .item-idx { fill: var(--muted); font-size: 13px; font-weight: 700; }
+.item .item-w, .item .item-v { font-size: 16px; font-weight: 600; }
+.item .item-tag { font-size: 12px; font-weight: 700; fill: var(--conflict); }
+.item.in .item-rect { fill: color-mix(in srgb, var(--p1) 16%, var(--card)); stroke: var(--p1); }
+.item.focus .item-rect { stroke: var(--focus); stroke-width: 3; }
+.item.pending { opacity: 0.55; }
+.item.removed .item-rect { stroke: var(--mut); stroke-dasharray: 6 4; }
+.item.removed .item-w, .item.removed .item-v { text-decoration: line-through; fill: var(--muted); }
+.item.removed .item-tag { fill: var(--mut); }
+.item.skipped .item-rect { stroke: var(--conflict); stroke-dasharray: 6 4; }
+
+.gene-btn { cursor: pointer; }
+.gene-btn:focus { outline: none; }
+.gene-btn:focus-visible .gene-rect { stroke: var(--focus); stroke-width: 3; stroke-dasharray: 4 3; }
+.gene.one .gene-rect { fill: var(--p1); }
+.gene.one .gene-num { fill: var(--p1-ink); }
+.gene.zero .gene-rect { fill: var(--card); stroke: var(--line); stroke-width: 2; }
+.gene.zero .gene-num { fill: var(--ink); }
+.gene.changed .gene-rect { fill: var(--mut); stroke: var(--mut); }
+.gene.changed .gene-num { fill: var(--mut-ink); }
+.gene.active .gene-rect { stroke: var(--focus); stroke-width: 3; }
+.gene-btn:hover .gene-rect { stroke: var(--focus); }
+.gene-num { font-size: 18px; }
+
+.bag-track { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+.seg-rect { fill: var(--p1); }
+.seg.focus .seg-rect { fill: color-mix(in srgb, var(--p1) 70%, var(--ink)); }
+.seg-label { fill: var(--p1-ink); font-size: 13px; font-weight: 700; pointer-events: none; }
+.excess { fill: url(#excessHatch); stroke: var(--conflict); stroke-width: 2; }
+.excess-bg { fill: color-mix(in srgb, var(--conflict) 12%, transparent); }
+.excess-line { stroke: var(--conflict); stroke-width: 3; }
+.cap-line { stroke: var(--ink); stroke-width: 2.5; }
+.cap-label { fill: var(--ink); font-size: 14px; font-weight: 700; }
+.summary { fill: var(--ink); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.summary .sum-over { fill: var(--conflict); }
+.summary .sum-fit { fill: var(--accent); }
+
+.sw-gene-one { background: var(--p1); }
+.sw-gene-zero { background: var(--card); border: 2px solid var(--line); }
+.sw-excess { background: repeating-linear-gradient(45deg, var(--conflict) 0 3px, color-mix(in srgb, var(--conflict) 12%, var(--card)) 3px 8px); border: 2px solid var(--conflict); }
+.sw-skipped { background: var(--card); border: 2px dashed var(--conflict); }
+
+.treat-table td.num { font-variant-numeric: tabular-nums; }
+.treat-table td.over { color: var(--conflict); font-weight: 600; }
+.treat-table td.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0.12em; }
+.treat-table .bit-changed { color: var(--mut); font-weight: 700; text-decoration: underline; }
+.treat-table tr.current { background: var(--band); }
+.treat-table tr.current th .link-btn { text-decoration: none; }
+.link-btn { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--ink); cursor: pointer; text-align: left; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.link-btn:hover { text-decoration-color: currentColor; }
+
+@media (max-width: 640px) {
+  .formula-rows { grid-template-columns: 1fr; gap: 2px; }
+  .formula-math { margin-bottom: 6px; font-size: 1rem; }
+}
+.viz-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 640px) {
+  #viz { min-width: 640px; }
+}

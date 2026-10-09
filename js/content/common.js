@@ -176,6 +176,50 @@
     },
   });
 
+
+  // Representación y manejo de restricciones
+  Object.assign(refs, {
+    martelloToth: {
+      id: 'martello-toth-1990',
+      type: 'book',
+      authors: 'Martello, S., & Toth, P.',
+      year: '1990',
+      title: 'Knapsack problems: Algorithms and computer implementations',
+      details: { es: 'Wiley', en: 'Wiley' },
+      url: null,
+    },
+    richardson: {
+      id: 'richardson-1989',
+      type: 'inproceedings',
+      authors: 'Richardson, J. T., Palmer, M. R., Liepins, G., & Hilliard, M.',
+      year: '1989',
+      title: 'Some guidelines for genetic algorithms with penalty functions',
+      container: 'Proceedings of the Third International Conference on Genetic Algorithms',
+      details: { es: '(J. D. Schaffer, ed., pp. 191–197). Morgan Kaufmann', en: '(J. D. Schaffer, Ed., pp. 191–197). Morgan Kaufmann' },
+      url: null,
+    },
+    orvoshDavis: {
+      id: 'orvosh-davis-1993',
+      type: 'inproceedings',
+      authors: 'Orvosh, D., & Davis, L.',
+      year: '1993',
+      title: 'Shall we repair? Genetic algorithms, combinatorial optimization, and feasibility constraints',
+      container: 'Proceedings of the Fifth International Conference on Genetic Algorithms',
+      details: { es: '(S. Forrest, ed., p. 650). Morgan Kaufmann', en: '(S. Forrest, Ed., p. 650). Morgan Kaufmann' },
+      url: null,
+    },
+    coello: {
+      id: 'coello-2002',
+      type: 'article',
+      authors: 'Coello Coello, C. A.',
+      year: '2002',
+      title: 'Theoretical and numerical constraint-handling techniques used with evolutionary algorithms: A survey of the state of the art',
+      container: 'Computer Methods in Applied Mechanics and Engineering',
+      details: { es: '191(11–12), 1245–1287', en: '191(11–12), 1245–1287' },
+      url: 'https://doi.org/10.1016/S0045-7825(01)00323-1',
+    },
+  });
+
   /** Referencia compartida con una nota propia del operador. */
   function ref(key, note, extra) {
     return Object.assign({}, refs[key], { note }, extra || {});
