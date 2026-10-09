@@ -53,7 +53,7 @@
           encodings: [
             {
               id: 'assignment-int',
-              ready: false,
+              ready: true,
               name: { es: 'Vector de enteros', en: 'Integer vector' },
               summary: {
                 es: 'El gen i dice en qué máquina se hace la tarea i: cada tarea va a una sola máquina por construcción.',
@@ -62,7 +62,7 @@
             },
             {
               id: 'assignment-matrix',
-              ready: false,
+              ready: true,
               name: { es: 'Matriz binaria', en: 'Binary matrix' },
               summary: {
                 es: 'Un bit por cada par tarea–máquina: la restricción «una máquina por tarea» hay que comprobarla.',

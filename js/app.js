@@ -44,12 +44,14 @@
   const DRAW_PARAMS = ['r'];
   const FIXED2 = ['ratio'];
   const FIXED1 = ['d', 'len', 'opt'];
+  const SIG2 = ['share'];   // porcentajes que pueden ser minúsculos (factibles de la matriz)
   const fill = (s, params) => (params ? s.replace(/\{(\w+)\}/g, (m, p) => {
     const v = params[p];
     if (v == null) return m;
     if (typeof v === 'number') {
       if (DRAW_PARAMS.indexOf(p) !== -1 || FIXED2.indexOf(p) !== -1) return fmtFixed(v, 2);
       if (FIXED1.indexOf(p) !== -1 && state.encId === 'tsp-perm') return fmtFixed(v, 1);
+      if (SIG2.indexOf(p) !== -1) return v.toLocaleString(locale(), { maximumSignificantDigits: 2 });
     }
     return fmt(v);
   }) : s);

@@ -1122,3 +1122,45 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 .sw-city-missing { border-radius: 50%; background: var(--card); border: 3px dashed var(--conflict); }
 .enc-extra:empty { display: none; }
 .formula-math { max-width: 100%; overflow-x: auto; }
+
+/* ---------- Asignación de tareas a máquinas ---------- */
+.task-head { fill: var(--muted); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.task-head.focus { fill: var(--ink); }
+.task-head.bad { fill: var(--conflict); }
+.mach-label { fill: var(--muted); font-size: 13px; font-weight: 700; transition: opacity 0.25s; }
+.pcell rect { fill: var(--card); stroke: var(--line); stroke-width: 1.5; transition: fill 0.2s, stroke 0.2s; }
+.pcell text { fill: var(--ink); font-size: 15px; font-variant-numeric: tabular-nums; pointer-events: none; }
+.pcell.fast text { font-weight: 800; }
+.pcell.chosen rect { fill: color-mix(in srgb, var(--p1) 22%, var(--card)); stroke: var(--p1); stroke-width: 2; }
+.pcell.focus rect { stroke: var(--focus); stroke-width: 3; }
+.gene.machine .gene-rect { fill: var(--p1); }
+.gene.machine .gene-num { fill: var(--p1-ink); }
+.gene.machine.changed .gene-rect { fill: var(--mut); }
+.col-bad { fill: none; stroke: var(--conflict); stroke-width: 2.5; stroke-dasharray: 6 4; pointer-events: none; }
+.lane { fill: var(--bg); stroke: var(--line); stroke-width: 1; }
+.bar rect { fill: var(--p1); }
+.bar text { fill: var(--p1-ink); font-size: 12px; font-weight: 700; pointer-events: none; }
+.bar.focus rect { fill: color-mix(in srgb, var(--p1) 70%, var(--ink)); }
+.bar.dup rect { fill: url(#dupHatch); stroke: var(--conflict); stroke-width: 2; }
+.bar.dup text { fill: var(--ink); }
+.bar.changed rect { fill: var(--mut); }
+.bar.changed text { fill: var(--mut-ink); }
+.dup-bg { fill: color-mix(in srgb, var(--conflict) 14%, var(--card)); }
+.dup-line { stroke: var(--conflict); stroke-width: 3; }
+.mark line { stroke-width: 2.5; }
+.mark text { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mark-cmax line { stroke: var(--ink); }
+.mark-cmax text { fill: var(--ink); }
+.mark-opt line { stroke: var(--wide); stroke-dasharray: 7 5; }
+.mark-opt text { fill: var(--wide); }
+.sw-cell-chosen { background: color-mix(in srgb, var(--p1) 22%, var(--card)); border: 2px solid var(--p1); }
+.sw-cell-fast { background: var(--card); border: 1.5px solid var(--line); position: relative; }
+.sw-cell-fast::after { content: '9'; position: absolute; inset: 0; display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+.sw-col-bad { background: var(--card); border: 2px dashed var(--conflict); }
+.sw-bar { background: var(--p1); }
+.sw-bar-dup { background: repeating-linear-gradient(45deg, var(--conflict) 0 3px, color-mix(in srgb, var(--conflict) 14%, var(--card)) 3px 8px); border: 2px solid var(--conflict); }
+.sw-cmax { background: var(--ink); }
+.both-same { margin: 0 0 10px; }
+.both-same code.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; padding: 1px 6px; border-radius: 6px; background: var(--band); }
+.both-table tr.current { background: var(--band); }
+.both-table tbody th a { font-weight: 700; }

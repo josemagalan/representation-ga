@@ -284,6 +284,40 @@
     },
   });
 
+  // Asignación de tareas a máquinas
+  Object.assign(refs, {
+    chuBeasley: {
+      id: 'chu-beasley-1997',
+      type: 'article',
+      authors: 'Chu, P. C., & Beasley, J. E.',
+      year: '1997',
+      title: 'A genetic algorithm for the generalised assignment problem',
+      container: 'Computers & Operations Research',
+      details: { es: '24(1), 17–23', en: '24(1), 17–23' },
+      url: 'https://doi.org/10.1016/S0305-0548(96)00032-9',
+    },
+    graham1979: {
+      id: 'graham-1979',
+      type: 'article',
+      authors: 'Graham, R. L., Lawler, E. L., Lenstra, J. K., & Rinnooy Kan, A. H. G.',
+      year: '1979',
+      title: 'Optimization and approximation in deterministic sequencing and scheduling: A survey',
+      container: 'Annals of Discrete Mathematics',
+      details: { es: '5, 287–326', en: '5, 287–326' },
+      url: 'https://doi.org/10.1016/S0167-5060(08)70356-X',
+    },
+    lenstra1990: {
+      id: 'lenstra-shmoys-tardos-1990',
+      type: 'article',
+      authors: 'Lenstra, J. K., Shmoys, D. B., & Tardos, É.',
+      year: '1990',
+      title: 'Approximation algorithms for scheduling unrelated parallel machines',
+      container: 'Mathematical Programming',
+      details: { es: '46(1–3), 259–271', en: '46(1–3), 259–271' },
+      url: 'https://doi.org/10.1007/BF01585745',
+    },
+  });
+
   /** Referencia compartida con una nota propia del operador. */
   function ref(key, note, extra) {
     return Object.assign({}, refs[key], { note }, extra || {});

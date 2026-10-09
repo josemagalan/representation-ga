@@ -51,6 +51,32 @@ const CASES = {
     js: (f, c) => { const out = f(c.x, c.coords); return [out.length, out.tour]; },
     py: 'f(c["x"], c["coords"])',
   },
+  'assignment-int': {
+    make(P, r) {
+      const n = R.randInt(r, 5, 8);
+      const m = R.randInt(r, 2, 4);
+      const inst = P.randomInstance(R.randInt(r, 1, 1e6), n, m);
+      const x = Array.from({ length: n }, () => R.randInt(r, 1, m));
+      const res = P.run(inst, x);
+      return { inst, p: inst.p, x, draws: [], fitness: res.result.fitness, solution: res.result.assignment };
+    },
+    js: (f, c) => { const out = f(c.x, c.p); return [out.makespan, out.assignment]; },
+    py: 'f(c["x"], c["p"])',
+  },
+  'assignment-matrix': {
+    make(P, r, t, variant) {
+      const n = R.randInt(r, 5, 8);
+      const m = R.randInt(r, 2, 4);
+      const inst = P.randomInstance(R.randInt(r, 1, 1e6), n, m);
+      const q = [1 / m, 0.25, 0.5][t % 3];
+      const x = t % 7 === 0 ? P.randomFeasible(t + 1, n, m) : Array.from({ length: n }, () => Array.from({ length: m }, () => (r() < q ? 1 : 0)));
+      const lambda = [0.5, 1, 2.5][t % 3];
+      const res = P.run(inst, x, { variant, lambda });
+      return { inst, p: inst.p, x, variant, lambda, draws: [], fitness: res.result.fitness, solution: res.result.solution };
+    },
+    js: (f, c) => { const out = f(c.x, c.p, c.variant, c.lambda); return [out.fitness, out.matrix]; },
+    py: 'f(c["x"], c["p"], c["variant"], c["lambda"])',
+  },
 };
 
 for (const enc of ready) {

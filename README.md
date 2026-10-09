@@ -32,13 +32,13 @@ It opens the series formed by [Selection](https://github.com/josemagalan/selecti
 | Representation | Problem | Encodings | What it teaches |
 | --- | --- | --- | --- |
 | Binary | 0/1 knapsack | Bit vector | Feasibility: penalty (linear and quadratic), repair (greedy and random) and decoders |
-| Integer | Task-to-machine assignment (makespan) | Integer vector · binary matrix | An encoding can absorb constraints; nominal versus ordinal integers |
+| Integer | Task-to-machine assignment, unrelated machines (makespan) | Integer vector · binary matrix | An encoding can absorb constraints; nominal versus ordinal integers |
 | Permutation | Travelling salesman problem | Permutation of cities | Structural validity; redundancy (2n chromosomes per tour) |
 | Real-valued | Continuous 2D function (Himmelblau, Rastrigin) | Real vector · binary (standard and Gray) | Precision versus number of bits, Hamming cliffs, the fitness landscape |
 
 ## Status
 
-In development. Available: the 0/1 knapsack with binary encoding (step by step through the five stages, the five ways of handling infeasibility side by side) and the travelling salesman problem with path representation (exact optimum, invalid chromosomes and their repair, and the 2n equivalent chromosomes of each tour), both with the Learn more panel. The assignment and continuous-function problems, practice mode, the comparison of encodings and the Moodle question banks will follow.
+In development. Available: the 0/1 knapsack with binary encoding (step by step through the five stages, the five ways of handling infeasibility side by side), the travelling salesman problem with path representation (exact optimum, invalid chromosomes and their repair, and the 2n equivalent chromosomes of each tour) and task-to-machine assignment with two encodings, an integer vector and a binary matrix (exact optimum, Gantt chart, repair and penalty for the matrix, and the same assignment written in both encodings), all with the Learn more panel. The continuous-function problem, practice mode, the full comparison of encodings and the Moodle question banks will follow.
 
 ## Features
 
