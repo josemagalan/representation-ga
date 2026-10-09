@@ -38,7 +38,7 @@ It opens the series formed by [Selection](https://github.com/josemagalan/selecti
 
 ## Status
 
-In development. Available: the 0/1 knapsack with binary encoding (step by step through the five stages, the five ways of handling infeasibility side by side, and the Learn more panel). The other problems, practice mode, the comparison of encodings and the Moodle question banks will follow.
+In development. Available: the 0/1 knapsack with binary encoding (step by step through the five stages, the five ways of handling infeasibility side by side) and the travelling salesman problem with path representation (exact optimum, invalid chromosomes and their repair, and the 2n equivalent chromosomes of each tour), both with the Learn more panel. The assignment and continuous-function problems, practice mode, the comparison of encodings and the Moodle question banks will follow.
 
 ## Features
 
@@ -76,7 +76,8 @@ They run on every push with GitHub Actions.
 | `js/registry.js`, `js/home.js` | Catalogue of representations, problems and encodings; home screen |
 | `js/problems/` | Logic of each encoding: instance, decoding, evaluation, feasibility and the trace of steps |
 | `js/content/` | Teaching content of each encoding: formalisation, explanation, narration, pseudocode, downloadable code and references |
-| `js/viz/` | D3 views, including the route maps for the travelling salesman problem |
+| `js/viz/` | D3 views of each encoding |
+| `js/ui/` | Controls and extra cards of each encoding page |
 | `js/about.js`, `js/app.js` | About page and footer, page controller |
 | `js/i18n.js`, `js/rng.js`, `js/cities.js` | Spanish and English texts; seeded random generator; random cities |
 | `img/logos/`, `vendor/` | Institution logos; D3.js v7 |

@@ -40,6 +40,17 @@ const CASES = {
     },
     py: 'f(c["x"], c["inst"]["weights"], c["inst"]["values"], c["inst"]["capacity"], c["variant"], c["lambda"], Fixed(c["draws"]))',
   },
+  'tsp-perm': {
+    make(P, r, t) {
+      const n = R.randInt(r, 5, 10);
+      const inst = P.randomInstance(R.randInt(r, 1, 1e6), n);
+      const x = r() < 0.6 ? R.randomPermutation(r, n) : Array.from({ length: n }, () => R.randInt(r, 1, n));
+      const res = P.run(inst, x);
+      return { inst, coords: inst.coords, x, draws: [], fitness: res.result.fitness, solution: res.result.tour };
+    },
+    js: (f, c) => { const out = f(c.x, c.coords); return [out.length, out.tour]; },
+    py: 'f(c["x"], c["coords"])',
+  },
 };
 
 for (const enc of ready) {

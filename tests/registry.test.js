@@ -43,9 +43,9 @@ test('todos los textos están en español y en inglés', () => {
   }
 });
 
-test('cada codificación disponible tiene sus dos ficheros', () => {
+test('cada codificación disponible tiene sus ficheros (lógica, contenido e interfaz)', () => {
   for (const e of registry.allEncodings().filter((x) => x.ready)) {
-    for (const dir of ['problems', 'content']) {
+    for (const dir of ['problems', 'content', 'ui']) {
       assert.ok(fs.existsSync(path.join(ROOT, 'js', dir, `${e.id}.js`)), `falta js/${dir}/${e.id}.js`);
     }
   }

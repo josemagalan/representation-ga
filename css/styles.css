@@ -1085,3 +1085,40 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 @media (max-width: 640px) {
   #viz { min-width: 640px; }
 }
+
+/* ---------- Viajante ---------- */
+.map-bg-rect { fill: var(--bg); stroke: var(--line); stroke-width: 1.5; }
+.route-optimal { fill: none; stroke: var(--wide); stroke-width: 3; stroke-dasharray: 8 6; opacity: 0.9; }
+.route-edge.tour-go, .route-edge.tour-close { stroke: var(--p1); stroke-width: 4; stroke-linecap: round; }
+.route-edge.tour-close { stroke-dasharray: 2 0; }
+.route-edge.tour-repeat { stroke: var(--conflict); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 7 5; }
+.route-edge.focus { stroke-width: 6; }
+.city.big text { font-size: 13px; }
+.city.visited circle { fill: var(--p1); stroke: var(--p1); }
+.city.visited text { fill: var(--p1-ink); }
+.city.start circle { stroke: var(--ink); stroke-width: 3.5; }
+.city.repeated circle { fill: var(--conflict); stroke: var(--conflict); }
+.city.repeated text { fill: var(--card); }
+.city.missing circle { fill: var(--card); stroke: var(--conflict); stroke-width: 3; stroke-dasharray: 4 3; }
+.gene-pos { fill: var(--muted); font-size: 12px; font-weight: 700; }
+.gene.perm .gene-rect { fill: var(--p1); }
+.gene.perm .gene-num { fill: var(--p1-ink); }
+.gene.perm.repeat .gene-rect { fill: var(--conflict); }
+.gene.perm.repeat .gene-num { fill: var(--card); }
+.gene.perm.changed .gene-rect { fill: var(--mut); }
+.gene.perm.changed .gene-num { fill: var(--mut-ink); }
+.gene.picked .gene-rect { stroke: var(--focus); stroke-width: 4; stroke-dasharray: 5 3; }
+.gene.picked { transform: translateY(-4px); }
+.summary.sum-main { font-size: 18px; }
+.summary.sum-opt { fill: var(--wide); }
+.summary.sum-fit { fill: var(--accent); }
+.equiv-table td.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: nowrap; font-size: 0.88rem; }
+.equiv-table td.current-cell { background: color-mix(in srgb, var(--accent) 18%, var(--card)); font-weight: 700; }
+.sw-city-dot { border-radius: 50%; background: var(--p1); }
+.sw-city-start { border-radius: 50%; background: var(--p1); box-shadow: inset 0 0 0 3px var(--ink); }
+.sw-tour { background: var(--p1); }
+.sw-tour-opt { background: repeating-linear-gradient(90deg, var(--wide) 0 7px, transparent 7px 11px); }
+.sw-tour-repeat { background: repeating-linear-gradient(90deg, var(--conflict) 0 7px, transparent 7px 11px); }
+.sw-city-missing { border-radius: 50%; background: var(--card); border: 3px dashed var(--conflict); }
+.enc-extra:empty { display: none; }
+.formula-math { max-width: 100%; overflow-x: auto; }

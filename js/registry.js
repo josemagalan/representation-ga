@@ -1,9 +1,10 @@
 /*
  * Catálogo de representaciones, problemas y codificaciones.
- * Representación → problemas → codificaciones. Una codificación con `ready: true` necesita dos
+ * Representación → problemas → codificaciones. Una codificación con `ready: true` necesita tres
  * ficheros con su mismo id:
  *   js/problems/<id>.js  (instancia, decodificación, evaluación, factibilidad y traza)
  *   js/content/<id>.js   (formalización y contenido docente)
+ *   js/ui/<id>.js        (controles, tarjetas propias y vista D3 de la página)
  * Las demás aparecen en la pantalla inicial como «próximamente».
  * Funciona tanto en el navegador (window.GAX.registry) como en Node (module.exports).
  */
@@ -87,7 +88,7 @@
           encodings: [
             {
               id: 'tsp-perm',
-              ready: false,
+              ready: true,
               name: { es: 'Permutación de ciudades', en: 'Permutation of cities' },
               summary: {
                 es: 'El orden de visita. Toda permutación es una ruta válida, pero cada ruta tiene 2n cromosomas equivalentes.',

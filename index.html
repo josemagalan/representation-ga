@@ -48,64 +48,7 @@
 
       <section class="card controls" aria-labelledby="controls-title">
         <h2 id="controls-title" class="sr-only">Controles</h2>
-        <div class="control-row">
-          <div class="field">
-            <label for="nItems" data-i18n="nItems">Objetos</label>
-            <div class="range-wrap">
-              <input type="range" id="nItems" min="5" max="12" step="1" value="8">
-              <output id="nItemsOut" for="nItems">8</output>
-            </div>
-          </div>
-          <div class="field">
-            <label for="seed" data-i18n="seed">Semilla</label>
-            <input type="number" id="seed" min="0" max="999999" step="1" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label for="capacity" data-i18n="capacity">Capacidad W</label>
-            <div class="range-wrap">
-              <input type="range" id="capacity" min="1" max="40" step="1" value="20">
-              <output id="capacityOut" for="capacity">20</output>
-            </div>
-          </div>
-          <div class="field">
-            <label for="variant" data-i18n="treatment">Tratamiento de la infactibilidad</label>
-            <select id="variant"></select>
-          </div>
-          <div class="field" id="lambdaField">
-            <label for="lambda" data-i18n="lambda">λ</label>
-            <div class="range-wrap">
-              <input type="range" id="lambda" min="0" max="5" step="0.1" value="1">
-              <output id="lambdaOut" for="lambda">1</output>
-            </div>
-          </div>
-          <div class="buttons">
-            <button type="button" id="btnInstance" class="btn primary" data-i18n="randomInstance">Instancia aleatoria</button>
-            <button type="button" id="btnChromosome" class="btn" data-i18n="randomChromosome">Cromosoma aleatorio</button>
-            <button type="button" id="btnDraw" class="btn" data-i18n="drawAgain" hidden>Sortear de nuevo</button>
-          </div>
-        </div>
-        <p id="variantDesc" class="hint variant-desc"></p>
-        <p id="rhoHint" class="hint variant-desc"></p>
-        <details id="manual">
-          <summary data-i18n="manualData">Introducir los datos a mano</summary>
-          <form id="manualForm" class="manual-form" novalidate>
-            <p class="hint" data-i18n="manualHint"></p>
-            <div class="manual-grid">
-              <label for="inW" data-i18n="manualWeights">Pesos w</label>
-              <input type="text" id="inW" autocomplete="off" spellcheck="false">
-              <label for="inV" data-i18n="manualValues">Valores v</label>
-              <input type="text" id="inV" autocomplete="off" spellcheck="false">
-              <label for="inCap" data-i18n="manualCapacity">Capacidad W</label>
-              <input type="text" id="inCap" autocomplete="off" spellcheck="false" inputmode="numeric">
-              <label for="inX" data-i18n="manualChromosome">Cromosoma x</label>
-              <input type="text" id="inX" autocomplete="off" spellcheck="false">
-            </div>
-            <div class="manual-actions">
-              <button type="submit" class="btn primary" data-i18n="apply">Aplicar</button>
-              <p id="err" class="error" role="alert"></p>
-            </div>
-          </form>
-        </details>
+        <div id="encControls"></div>
       </section>
 
       <section class="card stage">
@@ -119,7 +62,7 @@
             <title id="vizLabel"></title>
           </svg>
         </div>
-        <p class="hint drag-hint" id="editHint" data-i18n="editHint"></p>
+        <p class="hint drag-hint" id="editHint"></p>
 
         <div class="player" id="playerBox">
           <div class="player-buttons">
@@ -153,11 +96,7 @@
         <ul class="legend" id="legend"></ul>
       </section>
 
-      <section class="card" aria-labelledby="treat-title">
-        <h2 id="treat-title" class="learn-title" data-i18n="compareTitle">Los cinco tratamientos sobre este cromosoma</h2>
-        <p class="hint" data-i18n="compareNote"></p>
-        <div class="table-scroll"><table id="treatTable" class="cmp-table treat-table"></table></div>
-      </section>
+      <div id="encExtra" class="enc-extra"></div>
 
       <section class="card learn" aria-labelledby="learn-title">
         <h2 id="learn-title" class="learn-title" data-i18n="learnTitle">Para saber más</h2>
@@ -211,11 +150,16 @@
   <script src="js/i18n.js"></script>
   <script src="js/registry.js"></script>
   <script src="js/cities.js"></script>
-  <script src="js/viz/route-map.js"></script>
-  <script src="js/problems/knapsack-bits.js"></script>
-  <script src="js/viz/knapsack-view.js"></script>
   <script src="js/content/common.js"></script>
+  <script src="js/problems/knapsack-bits.js"></script>
+  <script src="js/problems/tsp-perm.js"></script>
   <script src="js/content/knapsack-bits.js"></script>
+  <script src="js/content/tsp-perm.js"></script>
+  <script src="js/viz/knapsack-view.js"></script>
+  <script src="js/viz/tsp-view.js"></script>
+  <script src="js/ui/controls.js"></script>
+  <script src="js/ui/knapsack-bits.js"></script>
+  <script src="js/ui/tsp-perm.js"></script>
   <script src="js/learn.js"></script>
   <script src="js/about.js"></script>
   <script src="js/home.js"></script>

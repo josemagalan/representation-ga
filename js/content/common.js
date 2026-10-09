@@ -220,6 +220,70 @@
     },
   });
 
+
+  // Viajante
+  Object.assign(refs, {
+    grefenstette1985: {
+      id: 'grefenstette-1985',
+      type: 'inproceedings',
+      authors: 'Grefenstette, J., Gopal, R., Rosmaita, B., & Van Gucht, D.',
+      year: '1985',
+      title: 'Genetic algorithms for the traveling salesman problem',
+      container: 'Proceedings of an International Conference on Genetic Algorithms and Their Applications',
+      details: { es: '(J. J. Grefenstette, ed., pp. 160–168). Lawrence Erlbaum', en: '(J. J. Grefenstette, Ed., pp. 160–168). Lawrence Erlbaum' },
+      url: null,
+    },
+    goldbergLingle: {
+      id: 'goldberg-lingle-1985',
+      type: 'inproceedings',
+      authors: 'Goldberg, D. E., & Lingle, R.',
+      year: '1985',
+      title: 'Alleles, loci, and the traveling salesman problem',
+      container: 'Proceedings of an International Conference on Genetic Algorithms and Their Applications',
+      details: { es: '(J. J. Grefenstette, ed., pp. 154–159). Lawrence Erlbaum', en: '(J. J. Grefenstette, Ed., pp. 154–159). Lawrence Erlbaum' },
+      url: 'https://doi.org/10.4324/9781315799674-15',
+    },
+    larranaga: {
+      id: 'larranaga-1999',
+      type: 'article',
+      authors: 'Larrañaga, P., Kuijpers, C. M. H., Murga, R. H., Inza, I., & Dizdarevic, S.',
+      year: '1999',
+      title: 'Genetic algorithms for the travelling salesman problem: A review of representations and operators',
+      container: 'Artificial Intelligence Review',
+      details: { es: '13(2), 129–170', en: '13(2), 129–170' },
+      url: 'https://doi.org/10.1023/A:1006529012972',
+    },
+    dfj: {
+      id: 'dantzig-fulkerson-johnson-1954',
+      type: 'article',
+      authors: 'Dantzig, G., Fulkerson, R., & Johnson, S.',
+      year: '1954',
+      title: 'Solution of a large-scale traveling-salesman problem',
+      container: 'Journal of the Operations Research Society of America',
+      details: { es: '2(4), 393–410', en: '2(4), 393–410' },
+      url: 'https://doi.org/10.1287/opre.2.4.393',
+    },
+    heldKarp: {
+      id: 'held-karp-1962',
+      type: 'article',
+      authors: 'Held, M., & Karp, R. M.',
+      year: '1962',
+      title: 'A dynamic programming approach to sequencing problems',
+      container: 'Journal of the Society for Industrial and Applied Mathematics',
+      details: { es: '10(1), 196–210', en: '10(1), 196–210' },
+      url: 'https://doi.org/10.1137/0110015',
+    },
+    applegate: {
+      id: 'applegate-2006',
+      type: 'book',
+      authors: 'Applegate, D. L., Bixby, R. E., Chvátal, V., & Cook, W. J.',
+      year: '2006',
+      title: 'The traveling salesman problem: A computational study',
+      details: { es: 'Princeton University Press', en: 'Princeton University Press' },
+      url: null,
+    },
+  });
+
   /** Referencia compartida con una nota propia del operador. */
   function ref(key, note, extra) {
     return Object.assign({}, refs[key], { note }, extra || {});
