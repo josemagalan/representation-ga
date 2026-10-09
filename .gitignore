@@ -1,0 +1,22 @@
+# Solo se publica el código de la herramienta (decisión D6, 02-DOCS/wiki/roadmap.md).
+# Harness de rsc y wiki del proyecto: locales, fuera del repositorio público.
+.claude/
+.codex/
+.gemini/
+.rsc/
+.rsc.json
+.worktrees/
+01-TOOLS/
+02-DOCS/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+Claude outputs/
+
+# Sistema y editores
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

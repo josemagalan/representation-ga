@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Representación de soluciones · Algoritmos genéticos</title>
+  <meta name="description" content="Herramienta docente interactiva: cómo se representa una solución en un algoritmo genético (binaria, entera, permutacional y real), de la formalización del problema a la decodificación del cromosoma. Interactive teaching tool: solution representation in genetic algorithms, from problem formalisation to chromosome decoding.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand" href="#" id="brandLink">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span data-i18n="brand">Representación en algoritmos genéticos</span>
+      </a>
+      <a class="portal-link" id="portalLink" href="https://josemagalan.github.io/genetic-algorithms-lab/?lang=es"><span aria-hidden="true">←</span> <span data-i18n="portalHome">Herramientas de algoritmos genéticos</span></a>
+      <div class="lang" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es" aria-pressed="true">ES</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main id="homeView" hidden>
+      <section class="hero">
+        <p class="eyebrow" data-i18n="homeEyebrow">Herramienta docente</p>
+        <h1 data-i18n="homeTitle">Representación de soluciones en algoritmos genéticos</h1>
+        <p class="lead" data-i18n="homeLead"></p>
+      </section>
+      <div id="repGrid" class="rep-grid"></div>
+      <p class="home-extra home-sister" id="seriesLinks">
+        <span data-i18n="seriesHomeLink">Después de representar: selección, cruce y mutación, las otras herramientas de la serie</span>
+        <span class="series-links">
+          <a id="sisterSelection" href="https://josemagalan.github.io/selection-ga/"><span data-i18n="seriesSelection">Selección</span> <span aria-hidden="true">→</span></a>
+          <a id="sisterCrossover" href="https://josemagalan.github.io/crossover-ga/"><span data-i18n="seriesCrossover">Cruce</span> <span aria-hidden="true">→</span></a>
+          <a id="sisterMutation" href="https://josemagalan.github.io/mutation-ga/"><span data-i18n="seriesMutation">Mutación</span> <span aria-hidden="true">→</span></a>
+        </span>
+      </p>
+    </main>
+
+    <main id="aboutView" hidden>
+      <a class="back" href="#" id="aboutBack"><span aria-hidden="true">←</span> <span data-i18n="allEncodings">Todas las representaciones</span></a>
+      <article class="card about" id="aboutBody"></article>
+    </main>
+    <footer class="site-foot" id="siteFoot"></footer>
+  </div>
+
+  <script src="vendor/d3.min.js"></script>
+  <script src="js/rng.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/registry.js"></script>
+  <script src="js/cities.js"></script>
+  <script src="js/viz/route-map.js"></script>
+  <script src="js/content/common.js"></script>
+  <script src="js/about.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
