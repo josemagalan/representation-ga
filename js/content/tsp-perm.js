@@ -8,7 +8,7 @@
 
   const explanation = {
     es: [
-      'En el problema del viajante (TSP) hay n ciudades y una distancia entre cada par. Hay que encontrar el circuito más corto que pase exactamente una vez por cada ciudad y vuelva a la de partida. Es el problema de optimización combinatoria más estudiado (Applegate et al., 2006) y el modelo de muchos problemas de rutas, secuenciación de tareas y fabricación.',
+      'En el problema del viajante (TSP) hay n ciudades y una distancia entre cada par. Hay que encontrar el circuito más corto que pase exactamente una vez por cada ciudad y vuelva a la de partida. Es el problema de optimización combinatoria más estudiado (Applegate et al., 2006) y el modelo de muchos problemas de rutas, secuenciación de tareas y fabricación. Aquí las ciudades están en un cuadrado de lado 100 y la distancia entre dos de ellas es la euclídea redondeada a una décima, igual que la biblioteca de problemas TSPLIB la redondea a enteros: así cada tramo, cada suma y el óptimo se escriben exactamente con los números que se ven.',
       'El mismo problema admite formalizaciones muy distintas. La clásica de programación lineal entera (Dantzig, Fulkerson y Johnson, 1954) usa una variable binaria xᵢⱼ por cada par de ciudades, que vale 1 si el circuito va de i a j, y necesita restricciones para que de cada ciudad se salga y se entre una vez y para que no se formen subcircuitos. La que se usa aquí toma como variable de decisión el propio orden de visita, una permutación π: la función objetivo es la longitud del circuito y la restricción ya no es una desigualdad, sino la estructura de la variable, que tiene que ser una permutación. La representación no viene impuesta por el problema: es una decisión de diseño.',
       'La codificación de camino (path representation) escribe el cromosoma como esa permutación: el gen k es la ciudad que se visita en el lugar k. Es la más natural y la más usada (Larrañaga et al., 1999), aunque no la única: la representación de adyacencia guarda en el gen i la ciudad que va después de la i, y la ordinal (Grefenstette et al., 1985) codifica el orden como una lista de posiciones dentro de las ciudades que quedan, de modo que cualquier cadena es válida.',
       'Toda permutación es un circuito válido, así que con esta codificación no hay cromosomas infactibles. El problema aparece al aplicar operadores pensados para otras representaciones: el cruce de un punto o el reinicio aleatorio de un gen dejan ciudades repetidas y otras sin visitar. Hay dos salidas: reparar el cromosoma, como hace la herramienta, o usar operadores que conservan la permutación, como el cruce PMX (Goldberg y Lingle, 1985) o el OX y las mutaciones de intercambio, inserción e inversión, que muestran las herramientas hermanas de cruce y mutación.',
@@ -16,7 +16,7 @@
       'Coste: decodificar y evaluar un cromosoma lleva un tiempo O(n). Encontrar el óptimo, en cambio, es un problema NP-difícil. Para mostrar aquí el circuito óptimo se usa el algoritmo de programación dinámica de Held y Karp (1962), que tarda O(n² 2ⁿ): unas cien mil operaciones con 10 ciudades, pero más de cien billones con 40.',
     ],
     en: [
-      'In the travelling salesman problem (TSP) there are n cities and a distance between each pair. The task is to find the shortest tour that visits every city exactly once and returns to the starting one. It is the most studied combinatorial optimisation problem (Applegate et al., 2006) and the model for many routing, task sequencing and manufacturing problems.',
+      'In the travelling salesman problem (TSP) there are n cities and a distance between each pair. The task is to find the shortest tour that visits every city exactly once and returns to the starting one. It is the most studied combinatorial optimisation problem (Applegate et al., 2006) and the model for many routing, task sequencing and manufacturing problems. Here the cities lie in a square of side 100 and the distance between two of them is the Euclidean one rounded to one decimal place, just as the TSPLIB problem library rounds it to integers: this way every leg, every sum and the optimum are written exactly with the numbers shown.',
       'The same problem admits very different formalisations. The classic integer linear programming one (Dantzig, Fulkerson and Johnson, 1954) uses a binary variable xᵢⱼ for each pair of cities, equal to 1 if the tour goes from i to j, and needs constraints so that each city is left and entered once and no subtours are formed. The one used here takes the visiting order itself as the decision variable, a permutation π: the objective function is the length of the tour and the constraint is no longer an inequality but the structure of the variable, which must be a permutation. The representation is not imposed by the problem: it is a design decision.',
       'Path representation writes the chromosome as that permutation: gene k is the city visited in place k. It is the most natural and the most widely used (Larrañaga et al., 1999), though not the only one: the adjacency representation stores in gene i the city that comes after city i, and the ordinal one (Grefenstette et al., 1985) encodes the order as a list of positions within the cities still left, so that any string is valid.',
       'Every permutation is a valid tour, so this encoding has no infeasible chromosomes. The problem appears when applying operators designed for other representations: one-point crossover or random resetting of a gene leave some cities repeated and others unvisited. There are two ways out: repairing the chromosome, as the tool does, or using operators that preserve the permutation, such as PMX crossover (Goldberg and Lingle, 1985) or OX and the swap, insert and inversion mutations, shown in the sister crossover and mutation tools.',
@@ -52,7 +52,7 @@
     es: {
       problem: 'Tenemos {n} ciudades. El viajante sale de una, tiene que pasar por todas exactamente una vez y volver a la de partida recorriendo la menor distancia posible.',
       formVars: 'Primero, qué se decide: el orden de visita. La variable de decisión es una secuencia π = (π₁, …, πₙ) de las {n} ciudades, donde πₖ es la ciudad que se visita en el lugar k.',
-      formObj: 'Segundo, qué se quiere: minimizar la longitud del circuito, la suma de las distancias entre ciudades consecutivas más la vuelta de la última a la primera.',
+      formObj: 'Segundo, qué se quiere: minimizar la longitud del circuito, la suma de las distancias entre ciudades consecutivas más la vuelta de la última a la primera. Cada distancia es la euclídea redondeada a una décima.',
       formCons: 'Tercero, qué no se puede: repetir una ciudad o saltarse alguna. Aquí la restricción no es una desigualdad, sino la estructura de la variable: π tiene que ser una permutación de las ciudades.',
       formSpace: 'Hay {n}! = {fact} permutaciones, pero solo {tours} circuitos distintos: cada uno se puede empezar en cualquiera de sus {n} ciudades y recorrer en dos sentidos, así que lo describen 2n = {twoN} permutaciones. El más corto, en trazo discontinuo, mide {opt}.',
       encode: 'Codificación de camino: el cromosoma es la propia permutación, {chrom}, y el gen k es la ciudad que se visita en el lugar k. Pulsa dos genes para intercambiarlos: el resultado sigue siendo una permutación.',
@@ -73,7 +73,7 @@
     en: {
       problem: 'We have {n} cities. The salesman leaves from one, must pass through all of them exactly once and return to the starting one, travelling the shortest possible distance.',
       formVars: 'First, what is decided: the visiting order. The decision variable is a sequence π = (π₁, …, πₙ) of the {n} cities, where πₖ is the city visited in place k.',
-      formObj: 'Second, what we want: to minimise the length of the tour, the sum of the distances between consecutive cities plus the way back from the last one to the first.',
+      formObj: 'Second, what we want: to minimise the length of the tour, the sum of the distances between consecutive cities plus the way back from the last one to the first. Each distance is the Euclidean one rounded to one decimal place.',
       formCons: 'Third, what cannot be done: repeating a city or skipping one. Here the constraint is not an inequality but the structure of the variable: π must be a permutation of the cities.',
       formSpace: 'There are {n}! = {fact} permutations, but only {tours} different tours: each one can start at any of its {n} cities and be travelled in two directions, so 2n = {twoN} permutations describe it. The shortest one, dashed, is {opt} long.',
       encode: 'Path representation: the chromosome is the permutation itself, {chrom}, and gene k is the city visited in place k. Click two genes to swap them: the result is still a permutation.',
@@ -178,12 +178,12 @@ import math
 def tour_length(tour, coords):
     """{{docLength}}"""
     n = len(tour)
-    total = 0.0
+    tenths = 0  # {{tenths}}
     for k in range(n):
         a = coords[tour[k] - 1]
         b = coords[tour[(k + 1) % n] - 1]  # {{wrap}}
-        total += math.hypot(a[0] - b[0], a[1] - b[1])
-    return total
+        tenths += math.floor(math.hypot(a[0] - b[0], a[1] - b[1]) * 10 + 0.5)
+    return tenths / 10
 
 
 def repair(x):
@@ -214,8 +214,8 @@ def tsp_fitness(x, coords):
 if __name__ == "__main__":
     # {{example}}
     coords = [(10, 10), (90, 10), (90, 90), (10, 90), (50, 50)]
-    print(tsp_fitness([1, 2, 5, 3, 4], coords))  # (~353.1, [1, 2, 5, 3, 4])
-    print(tsp_fitness([1, 2, 2, 3, 4], coords))  # (~353.1, [1, 2, 5, 3, 4])
+    print(tsp_fitness([1, 2, 5, 3, 4], coords))  # (353.2, [1, 2, 5, 3, 4])
+    print(tsp_fitness([1, 2, 2, 3, 4], coords))  # (353.2, [1, 2, 5, 3, 4])
     print(len(equivalent_chromosomes([1, 2, 5, 3, 4])))  # 10
 `,
     },
@@ -230,13 +230,13 @@ if __name__ == "__main__":
 /** {{docLength}} */
 function tourLength(tour, coords) {
   const n = tour.length;
-  let total = 0;
+  let tenths = 0; // {{tenths}}
   for (let k = 0; k < n; k++) {
     const a = coords[tour[k] - 1];
     const b = coords[tour[(k + 1) % n] - 1]; // {{wrap}}
-    total += Math.hypot(a[0] - b[0], a[1] - b[1]);
+    tenths += Math.round(Math.hypot(a[0] - b[0], a[1] - b[1]) * 10);
   }
-  return total;
+  return tenths / 10;
 }
 
 /** {{docRepair}} */
@@ -272,8 +272,8 @@ if (typeof module !== 'undefined' && module.exports) {
   if (require.main === module) {
     // {{example}}
     const coords = [[10, 10], [90, 10], [90, 90], [10, 90], [50, 50]];
-    console.log(tspFitness([1, 2, 5, 3, 4], coords)); // { length: ~353.1, tour: [1, 2, 5, 3, 4] }
-    console.log(tspFitness([1, 2, 2, 3, 4], coords)); // { length: ~353.1, tour: [1, 2, 5, 3, 4] }
+    console.log(tspFitness([1, 2, 5, 3, 4], coords)); // { length: 353.2, tour: [1, 2, 5, 3, 4] }
+    console.log(tspFitness([1, 2, 2, 3, 4], coords)); // { length: 353.2, tour: [1, 2, 5, 3, 4] }
     console.log(equivalentChromosomes([1, 2, 5, 3, 4]).length); // 10
   }
 }
@@ -285,7 +285,8 @@ if (typeof module !== 'undefined' && module.exports) {
     es: {
       title: 'Problema del viajante con representación de camino: evaluación, reparación y cromosomas equivalentes.',
       ref: 'Referencias: Grefenstette et al. (1985); Larrañaga et al. (1999); Talbi, E.-G. (2009); Bautista-Valhondo, J. (2020).',
-      docLength: 'Longitud del circuito cerrado que visita las ciudades en el orden del cromosoma. coords[c - 1] son las coordenadas (x, y) de la ciudad c.',
+      docLength: 'Longitud del circuito cerrado que visita las ciudades en el orden del cromosoma. coords[c - 1] son las coordenadas (x, y) de la ciudad c. Cada distancia es la euclídea redondeada a décimas.',
+      tenths: 'se suma en décimas enteras, para que el resultado sea exacto',
       wrap: 'tras la última ciudad se vuelve a la primera',
       docRepair: 'Convierte el cromosoma en una permutación: cada ciudad que aparece por segunda vez se cambia por la menor de las que faltan.',
       docEquiv: 'Los 2n cromosomas que describen el mismo circuito: las n rotaciones y las n del sentido contrario.',
@@ -296,7 +297,8 @@ if (typeof module !== 'undefined' && module.exports) {
     en: {
       title: 'Travelling salesman problem with path representation: evaluation, repair and equivalent chromosomes.',
       ref: 'References: Grefenstette et al. (1985); Larrañaga et al. (1999); Talbi, E.-G. (2009); Bautista-Valhondo, J. (2020).',
-      docLength: 'Length of the closed tour that visits the cities in the order of the chromosome. coords[c - 1] holds the (x, y) coordinates of city c.',
+      docLength: 'Length of the closed tour that visits the cities in the order of the chromosome. coords[c - 1] holds the (x, y) coordinates of city c. Each distance is the Euclidean one rounded to tenths.',
+      tenths: 'summed in whole tenths, so that the result is exact',
       wrap: 'after the last city, back to the first',
       docRepair: 'Turns the chromosome into a permutation: every city that appears for the second time is replaced by the smallest missing one.',
       docEquiv: 'The 2n chromosomes that describe the same tour: the n rotations and the n of the opposite direction.',

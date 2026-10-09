@@ -1,7 +1,9 @@
 /*
  * Problema del viajante (TSP) con representación permutacional (representación de camino).
  *
- * Instancia: n ciudades en el plano [0, 100] × [0, 100]; distancia euclídea.
+ * Instancia: n ciudades en el plano [0, 100] × [0, 100]; distancia euclídea redondeada a décimas
+ * (como TSPLIB redondea a enteros): cada tramo, cada suma y el óptimo son exactos con los números
+ * que se muestran. Internamente se suma en décimas enteras para no acumular errores de coma flotante.
  * Cromosoma: x = (x₁, …, xₙ), la ciudad que se visita en cada lugar. Si es una permutación de
  * 1…n, describe un circuito válido; si repite ciudades (lo que dejan un cruce o una mutación
  * pensados para otra representación), no lo es y se repara: recorriendo el cromosoma, cada ciudad
@@ -58,16 +60,19 @@
 
   // ---------- Evaluación ----------
 
-  const dist = (inst, a, b) => {
+  /** Distancia entre las ciudades a y b, en décimas enteras (euclídea × 10, redondeada). */
+  const distTenths = (inst, a, b) => {
     const p = inst.coords[a - 1];
     const q = inst.coords[b - 1];
-    return Math.hypot(p[0] - q[0], p[1] - q[1]);
+    return Math.round(Math.hypot(p[0] - q[0], p[1] - q[1]) * 10);
   };
+  /** Distancia euclídea redondeada a décimas. */
+  const dist = (inst, a, b) => distTenths(inst, a, b) / 10;
 
   function tourLength(inst, x) {
     let s = 0;
-    for (let k = 0; k < x.length; k++) s += dist(inst, x[k], x[(k + 1) % x.length]);
-    return s;
+    for (let k = 0; k < x.length; k++) s += distTenths(inst, x[k], x[(k + 1) % x.length]);
+    return s / 10;
   }
 
   function analyze(x) {
@@ -112,7 +117,7 @@
   function optimum(inst) {
     const n = inst.coords.length;
     const full = 1 << (n - 1);   // subconjuntos de las ciudades 2…n (bit j ↔ ciudad j + 2)
-    const D = (a, b) => dist(inst, a + 1, b + 1);
+    const D = (a, b) => distTenths(inst, a + 1, b + 1);   // en décimas enteras: sumas exactas
     const cost = new Float64Array(full * n).fill(Infinity);
     const prev = new Int8Array(full * n).fill(-1);
     for (let j = 1; j < n; j++) cost[(1 << (j - 1)) * n + j] = D(0, j);
@@ -146,7 +151,7 @@
     }
     tour.push(1);
     tour.reverse();
-    return { length: best, tour };
+    return { length: best / 10, tour };
   }
 
   const factorial = (k) => (k <= 1 ? 1 : k * factorial(k - 1));
@@ -164,6 +169,7 @@
     const steps = [];
     const st = { genes: x.slice(), revealed: 0, closed: false, changed: [], formula: null, showOpt: false, result: null, equivalents: false };
     let len = 0;
+    let lenT = 0;   // longitud acumulada en décimas enteras; len = lenT / 10
     function snap(type, stage, key, params, extra) {
       steps.push(Object.assign({
         type, stage, text: { key, params: params || {} },
@@ -198,15 +204,18 @@
         snap('decodeStart', 4, 'decodeStart', { city: x[0] }, { focus: [0] });
         continue;
       }
-      const d = dist(inst, x[k - 1], x[k]);
-      len += d;
+      const dT = distTenths(inst, x[k - 1], x[k]);
+      lenT += dT;
+      len = lenT / 10;
+      const d = dT / 10;
       const rep = seen.has(x[k]);
       seen.add(x[k]);
       snap(rep ? 'decodeRepeat' : 'decodeGo', 4, rep ? 'decodeRepeat' : 'decodeGo',
         { k: k + 1, from: x[k - 1], to: x[k], d: round1(d), len: round1(len) }, { focus: [k] });
     }
-    const dClose = dist(inst, x[n - 1], x[0]);
-    len += dClose;
+    const dClose = distTenths(inst, x[n - 1], x[0]) / 10;
+    lenT += distTenths(inst, x[n - 1], x[0]);
+    len = lenT / 10;
     st.closed = true;
     snap('decodeClose', 4, 'decodeClose', { from: x[n - 1], to: x[0], d: round1(dClose), len: round1(len) }, { focus: [n - 1, 0] });
 
@@ -242,7 +251,7 @@
 
   const api = {
     LIMITS, VARIANTS, randomInstance, randomChromosome, brokenChromosome, validate,
-    dist, tourLength, analyze, repair, equivalents, optimum, run,
+    dist, distTenths, tourLength, analyze, repair, equivalents, optimum, run,
     evaluate: (inst, x) => { const rp = repair(x); return { fitness: tourLength(inst, rp.tour), solution: rp.tour }; },
   };
   if (isNode) module.exports = api;

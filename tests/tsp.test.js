@@ -109,6 +109,34 @@ test('la traza recorre las cinco etapas, suma bien las distancias y repara cuand
   }
 });
 
+test('distancias en décimas: lo que se muestra cuadra exactamente', () => {
+  // Implementación independiente: euclídea redondeada a décimas, sumada en décimas enteras.
+  const tenths = (inst, a, b) => {
+    const [x1, y1] = inst.coords[a - 1];
+    const [x2, y2] = inst.coords[b - 1];
+    return Math.round(Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2) * 10);
+  };
+  const r = R.mulberry32(23);
+  for (let t = 0; t < 400; t++) {
+    const n = R.randInt(r, 5, 10);
+    const inst = T.randomInstance(t + 11, n);
+    const x = randomGenes(r, n);
+    let ref = 0;
+    for (let k = 0; k < n; k++) ref += tenths(inst, x[k], x[(k + 1) % n]);
+    assert.equal(Math.round(T.tourLength(inst, x) * 10), ref);
+    // Sumando los tramos que enseña la narración se obtiene exactamente la longitud que enseña.
+    const { steps, stats } = T.run(inst, x);
+    let shown = 0;
+    steps.filter((s) => ['decodeGo', 'decodeRepeat', 'decodeClose'].includes(s.type)).forEach((s) => {
+      shown += Math.round(s.text.params.d * 10);
+      assert.equal(Math.round(s.text.params.len * 10), shown, `paso ${s.type}`);
+    });
+    assert.equal(shown, ref);
+    // El óptimo también está en décimas exactas.
+    assert.ok(Math.abs(stats.optimum * 10 - Math.round(stats.optimum * 10)) < 1e-9);
+  }
+});
+
 test('validación del cromosoma introducido a mano', () => {
   const inst = T.randomInstance(1, 6);
   assert.equal(T.validate(inst, [1, 2, 3, 4, 5, 6]), null);
