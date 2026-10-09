@@ -77,6 +77,32 @@ const CASES = {
     js: (f, c) => { const out = f(c.x, c.p, c.variant, c.lambda); return [out.fitness, out.matrix]; },
     py: 'f(c["x"], c["p"], c["variant"], c["lambda"])',
   },
+  'function-real': {
+    make(P, r, t, variant) {
+      const fn = t % 2 ? 'rastrigin' : 'himmelblau';
+      const Fn = require('../js/func.js');
+      const x = t % 3 === 0 ? Fn.randomOutside(fn, t + 1) : (t % 3 === 1 ? Fn.randomPoint(fn, t + 1)
+        : [0, 1].map(() => Math.round((r() * 40 - 20) * 100) / 100));
+      const lambda = [0, 10, 37][t % 3];
+      const inst = { fn };
+      const res = P.run(inst, x, { variant, lambda });
+      return { inst, fn, x, variant, lambda, draws: [], fitness: res.result.fitness, solution: res.result.solution };
+    },
+    js: (f, c) => { const out = f(c.x, c.fn, c.variant, c.lambda); return [out.fitness, out.point]; },
+    py: 'f(c["x"], c["fn"], c["variant"], c["lambda"])',
+  },
+  'function-bits': {
+    make(P, r, t, variant) {
+      const fn = t % 2 ? 'rastrigin' : 'himmelblau';
+      const k = 2 + (t % 11);
+      const x = Array.from({ length: 2 * k }, () => (r() < 0.5 ? 0 : 1));
+      const inst = { fn, k };
+      const res = P.run(inst, x, { variant });
+      return { inst, fn, k, x, variant, draws: [], fitness: res.result.fitness, solution: res.result.solution };
+    },
+    js: (f, c) => { const out = f(c.x, c.fn, c.k, c.variant); return [out.fitness, out.point]; },
+    py: 'f(c["x"], c["fn"], c["k"], c["variant"])',
+  },
 };
 
 for (const enc of ready) {
@@ -96,7 +122,10 @@ for (const enc of ready) {
     }
     for (const row of content.formalization.rows) {
       LANGS.forEach((l) => assert.ok(row.label[l]));
-      assert.match(row.math, /^<math[\s>].*<\/math>$/s);
+      // El MathML puede depender de la instancia (p. ej. de la función): se comprueba con cada una
+      const maths = typeof row.math === 'function'
+        ? LANGS.flatMap((l) => ['himmelblau', 'rastrigin'].map((fn) => row.math(l, fn))) : [row.math];
+      maths.forEach((m) => assert.match(m, /^<math[\s>].*<\/math>$/s));
     }
     assert.deepEqual(Object.keys(content.narration.es).sort(), Object.keys(content.narration.en).sort());
     for (const k of Object.keys(content.narration.es)) assert.equal(params(content.narration.es[k]), params(content.narration.en[k]), k);

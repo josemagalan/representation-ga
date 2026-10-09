@@ -318,6 +318,72 @@
     },
   });
 
+  // Función continua: codificación real y binaria
+  Object.assign(refs, {
+    janikowMichalewicz: {
+      id: 'janikow-michalewicz-1991',
+      type: 'inproceedings',
+      authors: 'Janikow, C. Z., & Michalewicz, Z.',
+      year: '1991',
+      title: 'An experimental comparison of binary and floating point representations in genetic algorithms',
+      container: 'Proceedings of the Fourth International Conference on Genetic Algorithms',
+      details: { es: '(R. K. Belew y L. B. Booker, eds., pp. 31–36). Morgan Kaufmann', en: '(R. K. Belew & L. B. Booker, Eds., pp. 31–36). Morgan Kaufmann' },
+      url: null,
+    },
+    caruanaSchaffer: {
+      id: 'caruana-schaffer-1988',
+      type: 'inproceedings',
+      authors: 'Caruana, R. A., & Schaffer, J. D.',
+      year: '1988',
+      title: 'Representation and hidden bias: Gray vs. binary coding for genetic algorithms',
+      container: 'Proceedings of the Fifth International Conference on Machine Learning',
+      details: { es: '(pp. 153–161). Morgan Kaufmann', en: '(pp. 153–161). Morgan Kaufmann' },
+      url: 'https://doi.org/10.1016/B978-0-934613-64-4.50021-9',
+    },
+    himmelblau1972: {
+      id: 'himmelblau-1972',
+      type: 'book',
+      authors: 'Himmelblau, D. M.',
+      year: '1972',
+      title: 'Applied nonlinear programming',
+      details: { es: 'McGraw-Hill', en: 'McGraw-Hill' },
+      url: null,
+    },
+    muhlenbein1991: {
+      id: 'muhlenbein-schomisch-born-1991',
+      type: 'article',
+      authors: 'Mühlenbein, H., Schomisch, M., & Born, J.',
+      year: '1991',
+      title: 'The parallel genetic algorithm as function optimizer',
+      container: 'Parallel Computing',
+      details: { es: '17(6–7), 619–632', en: '17(6–7), 619–632' },
+      url: 'https://doi.org/10.1016/S0167-8191(05)80052-3',
+    },
+  });
+
+  /*
+   * Formalización común de la función continua: filas cuyo MathML depende de la función elegida
+   * (math(lang, fn)). Las codificaciones solo cambian la fila del espacio de búsqueda.
+   */
+  const sub = (a, b) => `<msub><mi>${a}</mi><mn>${b}</mn></msub>`;
+  const x1 = sub('x', 1);
+  const x2 = sub('x', 2);
+  const sq = (inner) => `<msup><mrow><mo>(</mo>${inner}<mo>)</mo></mrow><mn>2</mn></msup>`;
+  const pw2 = (v) => `<msup>${v}<mn>2</mn></msup>`;
+  const num = (v, lang) => `<mn>${String(v).replace('-', '−').replace('.', lang === 'es' ? ',' : '.')}</mn>`;
+  const BOX = { himmelblau: [-5, 5], rastrigin: [-5.12, 5.12] };
+  const box = (fn) => BOX[fn] || BOX.himmelblau;
+  const fnRows = {
+    vars: { id: 'vars', label: { es: 'Variables', en: 'Variables' },
+      math: () => `<math>${x1}<mo>,</mo>${x2}<mo>∈</mo><mi mathvariant="normal">ℝ</mi></math>` },
+    obj: { id: 'obj', label: { es: 'Objetivo', en: 'Objective' },
+      math: (lang, fn) => (fn === 'rastrigin'
+        ? `<math><mo>min</mo><mspace width="0.3em"></mspace><mi>f</mi><mo>=</mo><mn>20</mn><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>2</mn></munderover><mo>(</mo><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup><mo>−</mo><mn>10</mn><mspace width="0.17em"></mspace><mi>cos</mi><mo>⁡</mo><mspace width="0.17em"></mspace><mn>2</mn><mi>π</mi><msub><mi>x</mi><mi>i</mi></msub><mo>)</mo></math>`
+        : `<math><mo>min</mo><mspace width="0.3em"></mspace><mi>f</mi><mo>=</mo>${sq(`${pw2(x1)}<mo>+</mo>${x2}<mo>−</mo><mn>11</mn>`)}<mo>+</mo>${sq(`${x1}<mo>+</mo>${pw2(x2)}<mo>−</mo><mn>7</mn>`)}</math>`) },
+    cons: { id: 'cons', label: { es: 'Restricción', en: 'Constraint' },
+      math: (lang, fn) => `<math>${num(box(fn)[0], lang)}<mo>≤</mo><msub><mi>x</mi><mi>i</mi></msub><mo>≤</mo>${num(box(fn)[1], lang)}<mo>,</mo><mspace width="0.6em"></mspace><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn></math>` },
+  };
+
   /** Referencia compartida con una nota propia del operador. */
   function ref(key, note, extra) {
     return Object.assign({}, refs[key], { note }, extra || {});
@@ -345,7 +411,7 @@
   /** Referencias básicas del curso: aparecen en todos los operadores, tras la fuente original. */
   const CORE = ['talbi', 'bautista'];
 
-  const api = { refs, ref, makeHelpers, CORE };
+  const api = { refs, ref, makeHelpers, CORE, fnRows, fnBox: box };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else (root.GAX = root.GAX || {}).contentCommon = api;
 })(typeof self !== 'undefined' ? self : this);

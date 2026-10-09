@@ -48,6 +48,8 @@
   const fill = (s, params) => (params ? s.replace(/\{(\w+)\}/g, (m, p) => {
     const v = params[p];
     if (v == null) return m;
+    const own = state.ui && state.view === 'enc' && state.ui.formatParam ? state.ui.formatParam(p, v) : null;
+    if (own != null) return own;
     if (typeof v === 'number') {
       if (DRAW_PARAMS.indexOf(p) !== -1 || FIXED2.indexOf(p) !== -1) return fmtFixed(v, 2);
       if (FIXED1.indexOf(p) !== -1 && state.encId === 'tsp-perm') return fmtFixed(v, 1);
@@ -114,7 +116,8 @@
     const order = c.formalization.rows.map((r) => r.id);
     const reached = s.stage > 2 ? order.length : (s.formula ? order.indexOf(s.formula) + 1 : 0);
     el.formulaCard.hidden = s.stage < 2;
-    const key = `${state.encId}:${state.lang}`;
+    const arg = state.ui.formulaArg ? state.ui.formulaArg() : '';
+    const key = `${state.encId}:${state.lang}:${arg}`;
     if (el.formulaRows.dataset.key !== key) {
       el.formulaRows.replaceChildren(...c.formalization.rows.map((r) => {
         const row = document.createElement('div');
@@ -125,7 +128,8 @@
         lab.textContent = r.label[state.lang];
         const m = document.createElement('span');
         m.className = 'formula-math';
-        m.innerHTML = (state.lang === 'en' && r.mathEn) || r.math;   // MathML fijo del contenido docente
+        // MathML fijo del contenido docente (o que depende de la instancia, p. ej. de la función)
+        m.innerHTML = typeof r.math === 'function' ? r.math(state.lang, arg) : ((state.lang === 'en' && r.mathEn) || r.math);
         row.append(lab, m);
         return row;
       }));

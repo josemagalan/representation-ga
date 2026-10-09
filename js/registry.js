@@ -114,7 +114,7 @@
           encodings: [
             {
               id: 'function-real',
-              ready: false,
+              ready: true,
               name: { es: 'Vector de reales', en: 'Real vector' },
               summary: {
                 es: 'Un gen por variable, con toda la precisión de la máquina.',
@@ -123,7 +123,7 @@
             },
             {
               id: 'function-bits',
-              ready: false,
+              ready: true,
               name: { es: 'Cadena binaria (estándar o Gray)', en: 'Bit string (standard or Gray)' },
               summary: {
                 es: 'Cada variable en k bits: la precisión depende de k y el código Gray evita los saltos de Hamming.',
