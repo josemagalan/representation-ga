@@ -119,7 +119,7 @@
         // Matriz: filas = máquinas, columnas = tareas (como en el dibujo)
         const tbl = el('table', 'pr-grid');
         const head = el('tr');
-        head.append(el('th'));
+        head.append(el('td'));
         for (let i = 0; i < gr.grid.n; i++) head.append(txt('th', null, t('taskShort', { i: i + 1 }), { scope: 'col' }));
         const thead = el('thead');
         thead.append(head);
@@ -223,7 +223,7 @@
           const cap = txt('p', 'practice-given', t(gv.key));
           const tbl = el('table', 'cmp-table pr-dist');
           const head = el('tr');
-          head.append(el('th'));
+          head.append(el('td'));
           gv.table.head.forEach((h) => head.append(txt('th', null, String(h), { scope: 'col' })));
           const thead = el('thead');
           thead.append(head);

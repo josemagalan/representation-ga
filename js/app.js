@@ -292,7 +292,7 @@
     const prob = rep.problems.find((p) => p.id === m.problem);
     el.encEyebrow.textContent = t('repOf', { name: rep.name[state.lang].toLowerCase() });
     el.encTitle.textContent = prob.name[state.lang];
-    el.encSubtitle.textContent = `${m.name[state.lang]}: ${m.summary[state.lang]}`;
+    el.encSubtitle.textContent = `${m.name[state.lang]}. ${m.summary[state.lang]}`;
     el.vizLabel.textContent = t('svgLabel', { name: prob.name[state.lang] });
     document.title = t('encTitleDoc', { name: prob.name[state.lang] });
   }
@@ -469,6 +469,9 @@
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
     if (e.altKey || e.ctrlKey || e.metaKey) return;
+    // En una zona desplazable con el foco (código, figura o tabla que no cabe), las flechas e Inicio desplazan
+    const scroller = tag === 'pre' || (e.target.dataset && e.target.dataset.a11yScroll);
+    if (scroller && (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'Home')) return;
     if (e.key === 'ArrowRight') { e.preventDefault(); stop(); next(); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
     else if (e.key === ' ' && tag !== 'button' && tag !== 'summary' && tag !== 'a' && !(e.target.closest && e.target.closest('.gene-btn'))) { e.preventDefault(); togglePlay(); }
@@ -482,4 +485,5 @@
 
   // ---------- Arranque ----------
   route();
+  G.a11y.watch(document, () => t('scrollRegion'));
 })();

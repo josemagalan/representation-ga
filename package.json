@@ -1,6 +1,6 @@
 {
   "name": "representation-ga",
-  "version": "0.1.0",
+  "version": "0.9.0-beta",
   "private": true,
   "description": "Interactive teaching tool (D3.js) that shows, step by step, how solutions are represented in genetic algorithms",
   "scripts": {

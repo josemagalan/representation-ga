@@ -118,7 +118,7 @@
         return c.join(' ');
       })
         .attr('tabindex', live ? 0 : -1)
-        .attr('role', live ? 'button' : null)
+        .attr('role', live ? 'button' : 'img')
         .attr('aria-hidden', visible ? null : 'true')
         .attr('aria-label', (d) => t(live ? 'geneAria' : 'geneAriaStatic', { pos: d.i + 1, b: d.b }))
         .style('pointer-events', live ? null : 'none');

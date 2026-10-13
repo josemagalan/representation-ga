@@ -5,6 +5,7 @@
   'use strict';
 
   const REPO = 'https://github.com/josemagalan/representation-ga';
+  const VERSION = '0.9';       // beta pública; la 1.0 llegará tras la revisión docente del español
   const SISTERS = {
     selection: 'https://josemagalan.github.io/selection-ga/',
     crossover: 'https://josemagalan.github.io/crossover-ga/',
@@ -38,6 +39,10 @@
       lead: 'Herramienta docente interactiva para ver paso a paso cómo se pasa de un problema de optimización a un cromosoma: la formalización matemática, las decisiones de codificación, la decodificación y la validez de las soluciones. Cuatro problemas cubren las representaciones binaria, entera, permutacional y real, cada uno con su explicación, pseudocódigo, código descargable y referencias. ',
       authorsTitle: 'Autores',
       group: 'Todos los autores forman parte del grupo de investigación Los Goonies (Group of Organization and Industrial Engineering and Simulation).',
+      statusTitle: 'Versión',
+      status: 'Versión {v}, beta pública. Están disponibles las seis codificaciones en todos los modos; falta la revisión docente del texto en español y probar un banco de preguntas en un Moodle real. Si encuentras un error o tienes una sugerencia, cuéntanoslo en',
+      issues: 'GitHub',
+      footBeta: 'beta {v}',
       citeTitle: 'Cómo citar',
       cite: 'Estamos preparando un artículo sobre esta herramienta para el Congreso de Ingeniería de Organización. Mientras tanto, si quieres citarla, ponte en contacto con los autores.',
       sisterTitle: 'Herramientas hermanas',
@@ -56,21 +61,25 @@
     },
     en: {
       title: 'About this tool',
-      lead: 'Interactive teaching tool to follow, step by step, how an optimisation problem becomes a chromosome: the mathematical formalisation, the encoding decisions, decoding and the validity of solutions. Four problems cover the binary, integer, permutation and real-valued representations, each with explanations, pseudocode, downloadable code and references. ',
+      lead: 'An interactive teaching tool for following, step by step, how an optimisation problem becomes a chromosome: the mathematical formalisation, the encoding decisions, decoding and the validity of solutions. Four problems cover the binary, integer, permutation and real-valued representations, each with explanations, pseudocode, downloadable code and references. ',
       authorsTitle: 'Authors',
       group: 'All authors are members of the Los Goonies research group (Group of Organization and Industrial Engineering and Simulation).',
+      statusTitle: 'Version',
+      status: 'Version {v}, public beta. All six encodings are available in every mode; the Spanish text is awaiting review by the teaching team, and a question bank still has to be tried out in a production Moodle. If you find a mistake or have a suggestion, please tell us on',
+      issues: 'GitHub',
+      footBeta: 'beta {v}',
       citeTitle: 'How to cite',
       cite: 'We are preparing a paper on this tool for the Congreso de Ingeniería de Organización (Spanish conference on industrial management and engineering). In the meantime, if you would like to cite it, please contact the authors.',
       sisterTitle: 'Sister tools',
-      sister: 'This tool opens the series “Genetic algorithms, step by step”, by the same authors. The other three show, with the same approach, the operators that work on the chosen representation:',
+      sister: 'This tool opens the series “Genetic algorithms, step by step”, by the same authors. The other three use the same approach to show the operators that act on the chosen representation:',
       sisterLinks: { selection: 'Selection in genetic algorithms', crossover: 'Crossover in genetic algorithms', mutation: 'Mutation in genetic algorithms' },
       codeTitle: 'Code and licences',
-      code: 'The source code is on GitHub. The code, including the Python and JavaScript implementations downloadable from the tool, is released under the MIT licence; the teaching texts (explanations, formalisations, step narration and pseudocode), under CC BY 4.0. D3.js is ISC-licensed.',
+      code: 'The source code is on GitHub. The code, including the Python and JavaScript implementations downloadable from the tool, is released under the MIT licence, and the teaching texts (explanations, formalisations, step narration and pseudocode) under CC BY 4.0. D3.js is ISC-licensed.',
       repo: 'GitHub repository',
       thanksTitle: 'Acknowledgements',
       thanks: 'We thank Anthropic’s Claude for Science programme for supporting the development of this tool, which was built with the help of Claude.',
       foot: 'About',
-      footMoodle: 'Questions for Moodle',
+      footMoodle: 'Question banks for Moodle',
       footSister: 'Sister tools:',
       footSisters: { selection: 'selection', crossover: 'crossover', mutation: 'mutation' },
       footLicence: 'Code MIT · Texts CC BY 4.0',
@@ -152,6 +161,13 @@
         });
         return ul;
       })()),
+      section(T.statusTitle, (() => {
+        const p = node('p', null, `${T.status.replace('{v}', VERSION)} `);
+        const a = node('a', null, T.issues);
+        a.href = `${REPO}/issues`;
+        p.append(a, document.createTextNode('.'));
+        return p;
+      })()),
       section(T.citeTitle, node('p', null, T.cite)),
       section(T.codeTitle, codeP),
       section(T.thanksTitle, node('p', null, T.thanks)),
@@ -178,11 +194,11 @@
       a.href = sisterUrl(lang, k);
       links.append(a);
     });
-    links.append(document.createTextNode(' · '), gh, document.createTextNode(` · ${T.footLicence}`));
+    links.append(document.createTextNode(' · '), gh, document.createTextNode(` · ${T.footLicence} · ${T.footBeta.replace('{v}', VERSION)}`));
     info.append(links);
     container.replaceChildren(logoRow('site-foot-logos'), info);
   }
 
-  const api = { renderAbout, renderFooter, sisterUrl, authors, affiliations, text, SISTERS };
+  const api = { renderAbout, renderFooter, sisterUrl, authors, affiliations, text, SISTERS, VERSION };
   (root.GAX = root.GAX || {}).about = api;
 })(typeof self !== 'undefined' ? self : this);

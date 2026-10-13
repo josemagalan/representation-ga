@@ -31,7 +31,7 @@
               name: { es: 'Vector de bits', en: 'Bit vector' },
               summary: {
                 es: 'Un bit por objeto: 1 si entra en la mochila. Si no cabe, hay que penalizar, reparar o decodificar.',
-                en: 'One bit per item: 1 if it goes into the knapsack. If it does not fit, it must be penalised, repaired or decoded.',
+                en: 'One bit per item: 1 if it goes into the knapsack. If the selection does not fit, it must be penalised, repaired or decoded.',
               },
             },
           ],
@@ -57,7 +57,7 @@
               name: { es: 'Vector de enteros', en: 'Integer vector' },
               summary: {
                 es: 'El gen i dice en qué máquina se hace la tarea i: cada tarea va a una sola máquina por construcción.',
-                en: 'Gene i says on which machine task i is done: every task goes to exactly one machine by construction.',
+                en: 'Gene i is the machine on which task i is done: by construction, every task goes to exactly one machine.',
               },
             },
             {
@@ -127,7 +127,7 @@
               name: { es: 'Cadena binaria (estándar o Gray)', en: 'Bit string (standard or Gray)' },
               summary: {
                 es: 'Cada variable en k bits: la precisión depende de k y el código Gray evita los saltos de Hamming.',
-                en: 'Each variable in k bits: precision depends on k, and Gray code avoids Hamming cliffs.',
+                en: 'Each variable is encoded in k bits: precision depends on k, and Gray code avoids Hamming cliffs.',
               },
             },
           ],

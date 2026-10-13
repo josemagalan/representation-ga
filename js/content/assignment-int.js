@@ -17,20 +17,20 @@
       'Coste: decodificar y evaluar un cromosoma lleva un tiempo O(n + m). Encontrar el óptimo es NP-difícil; con estos tamaños la herramienta lo encuentra recorriendo las mⁿ asignaciones, como mucho 4⁸ = 65 536.',
     ],
     en: [
-      'In the unrelated parallel machine assignment problem there are n tasks and m machines working at the same time. Machine j takes pᵢⱼ to do task i, and that time depends on the pair: a machine may be fast with some tasks and slow with others. Each task is done entirely on a single machine, and we want everything to finish as early as possible, that is, to minimise the makespan Cmax, the largest of the machine loads. In the notation of Graham et al. (1979) it is the R‖Cmax problem. It is NP-hard, and even approximating it with guarantees is delicate (Lenstra, Shmoys and Tardos, 1990). It arises when sharing orders among production lines, jobs among processors or cases among teams.',
-      'The same problem admits two natural formalisations. The integer linear programming one uses a binary variable yᵢⱼ for each task–machine pair and one constraint per task, Σⱼ yᵢⱼ = 1, so that each task goes to exactly one machine. This one, instead, uses one integer variable per task, aᵢ ∈ {1, …, m}: the machine that does it. With it the constraint disappears, because each aᵢ is a single number: the domain of the variable has absorbed the constraint. The other formalisation, with its binary matrix encoding, can be seen on the sister page of this one.',
-      'The integer vector copies that variable: gene i is the machine of task i. It meets the three properties Talbi (2009) asks of a representation: it is complete (every assignment can be written), connected (changing genes leads from one assignment to any other) and efficient. Moreover, all mⁿ chromosomes are feasible assignments and each assignment has a single chromosome: there is no need to penalise or repair, and there is no redundancy. Chu and Beasley (1997) used this encoding for the generalised assignment problem precisely for that reason.',
-      'Locality is good too: changing one gene moves one task to another machine, which is the smallest possible change in the plan, and only alters the load of two machines. With the binary matrix, on the other hand, changing a single bit of a feasible assignment always makes it infeasible.',
-      'That the genes are integers does not mean they are quantities. Eiben and Smith (2015) distinguish between ordinal attributes, whose order is meaningful (the number of units produced), and nominal or categorical attributes, which are just labels. The machine number is nominal: machine 3 is not “closer” to machine 2 than to machine 1. That is why the right mutation here is random resetting, which replaces the gene by any other machine, and not creep mutation, which adds or subtracts a small amount; and arithmetic crossover, which averages the parents, makes no sense. One- and two-point and uniform crossover do work, because they only copy genes.',
-      'The encoding only absorbs the constraints that its structure expresses. If the machines also had a capacity, as in the generalised assignment problem, there would be infeasible integer vectors and penalty and repair would come back, as in the knapsack. And if the machines were identical, renaming them would give m! chromosomes for each plan: the redundancy of the travelling salesman would reappear.',
-      'Cost: decoding and evaluating a chromosome takes O(n + m) time. Finding the optimum is NP-hard; with these sizes the tool finds it by going through all mⁿ assignments, at most 4⁸ = 65,536.',
+      'In the task-to-machine assignment problem with unrelated machines, there are n tasks and m machines working in parallel. Machine j takes a processing time pᵢⱼ to do task i, and that time depends on the pair: a machine may be fast at some tasks and slow at others. Each task is done entirely on a single machine, and the aim is for everything to finish as early as possible, that is, to minimise the makespan Cmax, the largest of the machine loads. In the notation of Graham et al. (1979), this is the problem R‖Cmax. It is NP-hard, and even approximating it with a performance guarantee is difficult (Lenstra, Shmoys and Tardos, 1990). It arises when allocating orders to production lines, jobs to processors or cases to teams.',
+      'The same problem admits two natural formalisations. The integer linear programming formalisation uses a binary variable yᵢⱼ for each task–machine pair and one constraint per task, Σⱼ yᵢⱼ = 1, so that each task goes to exactly one machine. The one used here, by contrast, has one integer variable per task, aᵢ ∈ {1, …, m}: the machine that does it. With this variable the constraint disappears, because each aᵢ is a single number: the constraint has been absorbed by the domain of the variable. The other formalisation, with its binary matrix encoding, is shown on the companion page.',
+      'The integer vector mirrors that variable: gene i is the machine assigned to task i. It has the three properties that Talbi (2009) requires of a representation: it is complete (every assignment can be encoded), connected (any assignment can be reached from any other by changing genes) and efficient. Moreover, all mⁿ chromosomes are feasible assignments and each assignment corresponds to exactly one chromosome: there is no need to penalise or repair, and there is no redundancy. Chu and Beasley (1997) used this encoding for the generalised assignment problem precisely for that reason.',
+      'Locality is good too: changing one gene moves one task to another machine, which is the smallest possible change to the plan, and it alters the loads of only two machines. With the binary matrix, on the other hand, changing a single bit of a feasible assignment always makes it infeasible.',
+      'The fact that the genes are integers does not mean that they are quantities. Eiben and Smith (2015) distinguish between ordinal attributes, whose order is meaningful (such as the number of units produced), and nominal or categorical attributes, which are just labels. The machine number is nominal: machine 3 is not “closer” to machine 2 than to machine 1. That is why the right mutation here is random resetting, which replaces the gene with any other machine, not creep mutation, which adds or subtracts a small amount; and arithmetic crossover, which averages the parents, makes no sense. One-point, two-point and uniform crossover do work, because they only copy genes.',
+      'The encoding only absorbs the constraints that its structure expresses. If the machines also had a capacity, as in the generalised assignment problem, there would be infeasible integer vectors and penalty and repair would be needed again, as in the knapsack. And if the machines were identical, relabelling them would give m! chromosomes for each plan: the redundancy seen in the travelling salesman problem would reappear.',
+      'Cost: decoding and evaluating a chromosome takes O(n + m) time. Finding the optimum is NP-hard; at these sizes, the tool finds it by enumerating all mⁿ assignments, at most 4⁸ = 65,536.',
     ],
   };
 
   const variants = {
     int: {
       name: { es: 'Vector de enteros', en: 'Integer vector' },
-      desc: { es: 'El gen i es la máquina de la tarea i.', en: 'Gene i is the machine of task i.' },
+      desc: { es: 'El gen i es la máquina de la tarea i.', en: 'Gene i is the machine assigned to task i.' },
     },
   };
 
@@ -67,18 +67,18 @@
       nominal: 'Los genes son enteros, pero no cantidades: la máquina 3 no está «más cerca» de la 2 que de la 1. Son etiquetas (un entero nominal), así que no tienen sentido operadores pensados para enteros ordinales, como sumar o restar 1 a un gen o promediar dos padres. Para mutar, se cambia el gen por otra de las {m} máquinas, cualquiera.',
     },
     en: {
-      problem: 'There are {n} tasks and {m} different machines working at the same time. The table gives the time each machine takes on each task: the same task may be fast on one machine and slow on another. Each task is done on a single machine, and we want everything to finish as early as possible.',
-      formVars: 'First, what is decided: on which machine each task is done. There is one integer variable per task, aᵢ ∈ {1, …, {m}}, the machine of task i; there are {n} variables.',
+      problem: 'There are {n} tasks and {m} different machines working at the same time. The table gives the time each machine takes on each task: the same task may be quick on one machine and slow on another. Each task is done on a single machine, and we want everything to finish as early as possible.',
+      formVars: 'First, what is decided: on which machine each task is done. There is one integer variable per task, aᵢ ∈ {1, …, {m}}, the machine assigned to task i; there are {n} variables in all.',
       formObj: 'Second, what we want: to minimise the makespan, Cmax, the time at which the last machine finishes. The load of a machine is the sum of the times of its tasks, and Cmax is the largest of the loads.',
-      formCons: 'Third, what cannot be done: doing a task on two machines or leaving it undone. With this variable there is no need to write it down: each aᵢ is a single number, so each task has exactly one machine. The domain of the variable absorbs the constraint.',
+      formCons: 'Third, what is not allowed: doing a task on two machines or leaving it undone. With this variable there is no need to write it down: each aᵢ is a single number, so each task has exactly one machine. The domain of the variable absorbs the constraint.',
       formSpace: 'There are {pow} = {total} possible assignments ({m} machines for each of the {n} tasks), and all of them are feasible. The best possible makespan, the dashed line, is {opt}.',
-      encode: 'Encoding: the chromosome is the assignment itself, {chrom}. Gene i is the machine of task i, and its time is highlighted in the table. Click a gene to move its task to the next machine.',
-      decodeIntro: 'Decoding means going from the chromosome to the work plan: we go through the tasks in order and each one joins the queue of its machine.',
+      encode: 'Encoding: the chromosome is the assignment itself, {chrom}. Gene i is the machine assigned to task i, and its processing time is highlighted in the table. Click a gene to move its task to the next machine.',
+      decodeIntro: 'Decoding means going from the chromosome to the work plan: we go through the tasks in order and each one is added to the end of its machine’s queue.',
       decodeTask: 'Gene {i} = {j}: task {i} goes to machine {j}, which takes {p} to do it. Machine {j} now has a load of {load}.',
       decodeDone: 'Machine loads: {loads}. The makespan is the largest, {cmax} (machine {crit}). The optimum, the dashed line, is {opt}: this plan takes {gap}% longer.',
       decodeDoneOpt: 'Machine loads: {loads}. The makespan is the largest, {cmax} (machine {crit}), and it is the optimum: no plan finishes earlier.',
       validInt: 'Validity: any vector of integers between 1 and m is a feasible assignment, because each gene gives its task a single machine. All {total} chromosomes are solutions, and the fitness of this one is its makespan, {cmax}. No penalty and no repair: the encoding has absorbed the constraint.',
-      nominal: 'The genes are integers, but not quantities: machine 3 is not “closer” to machine 2 than to machine 1. They are labels (a nominal integer), so operators designed for ordinal integers, such as adding or subtracting 1 from a gene or averaging two parents, make no sense. To mutate, the gene is replaced by another of the {m} machines, any of them.',
+      nominal: 'The genes are integers, but not quantities: machine 3 is not “closer” to machine 2 than to machine 1. They are labels (nominal integers), so operators designed for ordinal integers, such as adding 1 to or subtracting 1 from a gene, or averaging two parents, make no sense. To mutate a gene, it is replaced by any other of the {m} machines.',
     },
   };
 
@@ -203,11 +203,11 @@ if (typeof module !== 'undefined' && module.exports) {
       example: 'Ejemplo: seis tareas y tres máquinas; la segunda asignación es óptima',
     },
     en: {
-      title: 'Assignment of tasks to unrelated machines (R||Cmax) with an integer vector: evaluation.',
+      title: 'Task-to-machine assignment with unrelated machines (R||Cmax) encoded as an integer vector: evaluation.',
       ref: 'References: Chu, P. C. & Beasley, J. E. (1997); Talbi, E.-G. (2009); Bautista-Valhondo, J. (2020).',
-      docLoads: 'Load of each machine: a[i] is the machine (from 1 to m) of task i + 1 and p[i][j] the time of task i + 1 on machine j + 1.',
+      docLoads: 'Load of each machine: a[i] is the machine (from 1 to m) assigned to task i + 1, and p[i][j] is the processing time of task i + 1 on machine j + 1.',
       oneMachine: 'each task adds its time to a single machine',
-      docFitness: 'Fitness (makespan, to be minimised) of chromosome a: the largest of the loads. Every vector of integers between 1 and m is feasible. Returns the makespan and the evaluated assignment.',
+      docFitness: 'Fitness (makespan, to be minimised) of chromosome a: the largest machine load. Every vector of integers between 1 and m is feasible. Returns the makespan and the evaluated assignment.',
       example: 'Example: six tasks and three machines; the second assignment is optimal',
     },
   };
@@ -215,7 +215,7 @@ if (typeof module !== 'undefined' && module.exports) {
   const references = [
     C.ref('chuBeasley', {
       es: 'Algoritmo genético para el problema de asignación generalizada que codifica la solución como un vector de enteros, con el agente de cada tarea en su gen, de modo que cada tarea queda asignada exactamente una vez. Las capacidades sí pueden violarse, y las trata con una heurística de reparación.',
-      en: 'Genetic algorithm for the generalised assignment problem that encodes the solution as an integer vector, with the agent of each task in its gene, so that every task is assigned exactly once. Capacities can still be violated, and are handled with a repair heuristic.',
+      en: 'Genetic algorithm for the generalised assignment problem that encodes the solution as an integer vector, where each gene holds the agent assigned to its task, so that every task is assigned exactly once. Capacities can still be violated, and these violations are handled with a repair heuristic.',
     }, { original: true }),
     C.ref('talbi', {
       es: 'Manual de referencia del curso. Trata la representación de las soluciones y sus propiedades deseables (completitud, conexidad, eficiencia), y el manejo de restricciones.',

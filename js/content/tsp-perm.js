@@ -16,11 +16,11 @@
       'Coste: decodificar y evaluar un cromosoma lleva un tiempo O(n). Encontrar el óptimo, en cambio, es un problema NP-difícil. Para mostrar aquí el circuito óptimo se usa el algoritmo de programación dinámica de Held y Karp (1962), que tarda O(n² 2ⁿ): unas cien mil operaciones con 10 ciudades, pero más de cien billones con 40.',
     ],
     en: [
-      'In the travelling salesman problem (TSP) there are n cities and a distance between each pair. The task is to find the shortest tour that visits every city exactly once and returns to the starting one. It is the most studied combinatorial optimisation problem (Applegate et al., 2006) and the model for many routing, task sequencing and manufacturing problems. Here the cities lie in a square of side 100 and the distance between two of them is the Euclidean one rounded to one decimal place, just as the TSPLIB problem library rounds it to integers: this way every leg, every sum and the optimum are written exactly with the numbers shown.',
-      'The same problem admits very different formalisations. The classic integer linear programming one (Dantzig, Fulkerson and Johnson, 1954) uses a binary variable xᵢⱼ for each pair of cities, equal to 1 if the tour goes from i to j, and needs constraints so that each city is left and entered once and no subtours are formed. The one used here takes the visiting order itself as the decision variable, a permutation π: the objective function is the length of the tour and the constraint is no longer an inequality but the structure of the variable, which must be a permutation. The representation is not imposed by the problem: it is a design decision.',
-      'Path representation writes the chromosome as that permutation: gene k is the city visited in place k. It is the most natural and the most widely used (Larrañaga et al., 1999), though not the only one: the adjacency representation stores in gene i the city that comes after city i, and the ordinal one (Grefenstette et al., 1985) encodes the order as a list of positions within the cities still left, so that any string is valid.',
-      'Every permutation is a valid tour, so this encoding has no infeasible chromosomes. The problem appears when applying operators designed for other representations: one-point crossover or random resetting of a gene leave some cities repeated and others unvisited. There are two ways out: repairing the chromosome, as the tool does, or using operators that preserve the permutation, such as PMX crossover (Goldberg and Lingle, 1985) or OX and the swap, insert and inversion mutations, shown in the sister crossover and mutation tools.',
-      'The price of path representation is redundancy: the same tour can start at any of its n cities and be travelled in either direction, so 2n different permutations describe it. Of the n! permutations there are only (n − 1)!/2 different tours. The algorithm treats those 2n chromosomes as different solutions even though they have the same fitness, and two parents describing the same tour from different starting cities may have children worse than themselves. Fixing the first city reduces the redundancy to 2.',
+      'In the travelling salesman problem (TSP) there are n cities and a distance between each pair. The task is to find the shortest tour that visits every city exactly once and returns to the starting city. It is the most widely studied combinatorial optimisation problem (Applegate et al., 2006) and the model for many routing, task sequencing and manufacturing problems. Here the cities lie in a square of side 100 and the distance between two cities is the Euclidean distance rounded to one decimal place, much as the TSPLIB problem library rounds it to integers: in this way every leg, every sum and the optimum can be written exactly with the numbers shown.',
+      'The same problem admits very different formalisations. The classic integer linear programming one (Dantzig, Fulkerson and Johnson, 1954) uses a binary variable xᵢⱼ for each pair of cities, equal to 1 if the tour goes from i to j, and needs constraints ensuring that each city is entered and left exactly once and that no subtours are formed. The one used here takes the visiting order itself as the decision variable, a permutation π: the objective function is the length of the tour and the constraint is no longer an inequality but the structure of the variable, which must be a permutation. The representation is not imposed by the problem: it is a design decision.',
+      'Path representation writes the chromosome as that permutation: gene k is the city visited in position k. It is the most natural and the most widely used (Larrañaga et al., 1999), though not the only one: the adjacency representation stores in gene i the city that comes after city i, and the ordinal one (Grefenstette et al., 1985) encodes the order as a list of positions within the list of cities not yet visited, so that any string is valid.',
+      'Every permutation is a valid tour, so this encoding has no infeasible chromosomes. The problem arises when operators designed for other representations are applied: one-point crossover or random resetting of a gene leave some cities repeated and others unvisited. There are two ways out: repairing the chromosome, as the tool does, or using operators that preserve the permutation, such as PMX crossover (Goldberg and Lingle, 1985), OX crossover and the swap, insert and inversion mutations, which are shown in the sister crossover and mutation tools.',
+      'The price of path representation is redundancy: the same tour can start at any of its n cities and be travelled in either direction, so 2n different permutations describe it. The n! permutations correspond to only (n − 1)!/2 different tours. The algorithm treats those 2n chromosomes as different solutions even though they have the same fitness, and two parents describing the same tour from different starting cities may produce offspring worse than either of them. Fixing the first city reduces the redundancy to 2 chromosomes per tour.',
       'Cost: decoding and evaluating a chromosome takes O(n) time. Finding the optimum, on the other hand, is NP-hard. To show the optimal tour here, the tool uses Held and Karp’s (1962) dynamic programming algorithm, which takes O(n² 2ⁿ): about a hundred thousand operations with 10 cities, but over a hundred trillion with 40.',
     ],
   };
@@ -28,7 +28,7 @@
   const variants = {
     path: {
       name: { es: 'Representación de camino', en: 'Path representation' },
-      desc: { es: 'El gen k es la ciudad que se visita en el lugar k.', en: 'Gene k is the city visited in place k.' },
+      desc: { es: 'El gen k es la ciudad que se visita en el lugar k.', en: 'Gene k is the city visited in position k.' },
     },
   };
 
@@ -71,25 +71,25 @@
       repairDone: 'Cromosoma reparado: {chrom}, un circuito válido de longitud {len}. Lo habitual, en cambio, es usar operadores que no rompan la permutación, como los que muestran las herramientas de cruce y mutación.',
     },
     en: {
-      problem: 'We have {n} cities. The salesman leaves from one, must pass through all of them exactly once and return to the starting one, travelling the shortest possible distance.',
-      formVars: 'First, what is decided: the visiting order. The decision variable is a sequence π = (π₁, …, πₙ) of the {n} cities, where πₖ is the city visited in place k.',
-      formObj: 'Second, what we want: to minimise the length of the tour, the sum of the distances between consecutive cities plus the way back from the last one to the first. Each distance is the Euclidean one rounded to one decimal place.',
+      problem: 'We have {n} cities. The salesman starts from one of them, must visit every city exactly once and return to the starting city, travelling the shortest possible distance.',
+      formVars: 'First, what is decided: the visiting order. The decision variable is a sequence π = (π₁, …, πₙ) of the {n} cities, where πₖ is the city visited in position k.',
+      formObj: 'Second, what we want: to minimise the length of the tour, the sum of the distances between consecutive cities plus the return leg from the last city to the first. Each distance is the Euclidean distance rounded to one decimal place.',
       formCons: 'Third, what cannot be done: repeating a city or skipping one. Here the constraint is not an inequality but the structure of the variable: π must be a permutation of the cities.',
-      formSpace: 'There are {n}! = {fact} permutations, but only {tours} different tours: each one can start at any of its {n} cities and be travelled in two directions, so 2n = {twoN} permutations describe it. The shortest one, dashed, is {opt} long.',
-      encode: 'Path representation: the chromosome is the permutation itself, {chrom}, and gene k is the city visited in place k. Click two genes to swap them: the result is still a permutation.',
+      formSpace: 'There are {n}! = {fact} permutations, but only {tours} different tours: each one can start at any of its {n} cities and be travelled in two directions, so 2n = {twoN} permutations describe it. The shortest, shown dashed, is {opt} long.',
+      encode: 'Path representation: the chromosome is the permutation itself, {chrom}, and gene k is the city visited in position k. Click two genes to swap them: the result is still a permutation.',
       decodeIntro: 'Decoding means going from the chromosome to the tour: we read the genes from left to right and join each city to the next one.',
-      decodeStart: 'Gene 1: the salesman leaves from city {city}.',
-      decodeGo: 'Gene {k}: from city {from} to city {to}, {d}. So far, {len}.',
-      decodeRepeat: 'Gene {k}: from city {from} to city {to}, {d}. But city {to} had already been visited! So far, {len}.',
-      decodeClose: 'To close the tour, from the last city, {from}, back to the first, {to}: {d}. Total length: {len}.',
-      decodeDone: 'The tour is {len} long. The optimum, dashed, is {opt}: this one is {gap}% longer.',
-      decodeDoneOpt: 'The tour is {len} long: it is the shortest possible, the optimum.',
-      validPerm: 'Validity: the chromosome is a permutation, with each city only once, so it describes a valid tour and its fitness is its length, {len}. With this encoding there are no infeasible chromosomes as long as the operators preserve the permutation.',
+      decodeStart: 'Gene 1: the salesman starts from city {city}.',
+      decodeGo: 'Gene {k}: from city {from} to city {to}, {d}. Running total: {len}.',
+      decodeRepeat: 'Gene {k}: from city {from} to city {to}, {d}. But city {to} had already been visited! Running total: {len}.',
+      decodeClose: 'To close the tour, the salesman returns from the last city, {from}, to the first, {to}: {d}. Total length: {len}.',
+      decodeDone: 'The tour is {len} long. The optimum, shown dashed, is {opt}: this tour is {gap}% longer.',
+      decodeDoneOpt: 'The tour is {len} long: it is the shortest possible tour, the optimum.',
+      validPerm: 'Validity: the chromosome is a permutation, with each city appearing exactly once, so it describes a valid tour and its fitness is its length, {len}. With this encoding there are no infeasible chromosomes as long as the operators preserve the permutation.',
       redundancy: 'The price is redundancy: the {twoN} chromosomes in the table describe this same tour ({n} starting cities × 2 directions). The algorithm treats them as different solutions even though they have the same fitness.',
-      invalidPerm: 'Validity: the chromosome is not a permutation. Repeated cities: {rep}. Missing cities: {miss}. It does not describe a travelling salesman tour, so giving it a fitness makes no sense. This is what a crossover or mutation designed for another representation leaves behind.',
-      repairIntro: 'Repair: we scan the chromosome and, whenever a city appears for the second time, we replace it by the smallest of the missing ones.',
-      repairFix: 'Gene {pos}: city {old} was already in the tour; we replace it by city {nw}.',
-      repairDone: 'Repaired chromosome: {chrom}, a valid tour of length {len}. The usual approach, however, is to use operators that do not break the permutation, like those shown in the crossover and mutation tools.',
+      invalidPerm: 'Validity: the chromosome is not a permutation. Repeated cities: {rep}. Missing cities: {miss}. It does not describe a travelling salesman tour, so it makes no sense to assign it a fitness. This is what a crossover or mutation operator designed for another representation can produce.',
+      repairIntro: 'Repair: we scan the chromosome and, whenever a city appears for the second time, we replace it with the smallest of the missing ones.',
+      repairFix: 'Gene {pos}: city {old} was already in the tour; we replace it with city {nw}.',
+      repairDone: 'Repaired chromosome: {chrom}, a valid tour of length {len}. The usual approach, however, is to use operators that do not break the permutation, such as those shown in the crossover and mutation tools.',
     },
   };
 
@@ -120,7 +120,7 @@
       rsig: 'REPAIR(π)',
       rinit: 'seen ← ∅;  missing ← cities not in π, in increasing order',
       rfor: 'for k = 1, …, n:',
-      rif: 'if π[k] ∈ seen: π[k] ← first of missing, which is removed from missing',
+      rif: 'if π[k] ∈ seen: π[k] ← first city in missing, which is removed from missing',
       radd: 'seen ← seen ∪ {π[k]}',
       rret: 'return π',
     },
@@ -297,21 +297,21 @@ if (typeof module !== 'undefined' && module.exports) {
     en: {
       title: 'Travelling salesman problem with path representation: evaluation, repair and equivalent chromosomes.',
       ref: 'References: Grefenstette et al. (1985); Larrañaga et al. (1999); Talbi, E.-G. (2009); Bautista-Valhondo, J. (2020).',
-      docLength: 'Length of the closed tour that visits the cities in the order of the chromosome. coords[c - 1] holds the (x, y) coordinates of city c. Each distance is the Euclidean one rounded to tenths.',
-      tenths: 'summed in whole tenths, so that the result is exact',
-      wrap: 'after the last city, back to the first',
+      docLength: 'Length of the closed tour that visits the cities in the order of the chromosome. coords[c - 1] holds the (x, y) coordinates of city c. Each distance is the Euclidean distance rounded to one decimal place.',
+      tenths: 'accumulated as a whole number of tenths so that the result is exact',
+      wrap: 'after the last city, return to the first',
       docRepair: 'Turns the chromosome into a permutation: every city that appears for the second time is replaced by the smallest missing one.',
-      docEquiv: 'The 2n chromosomes that describe the same tour: the n rotations and the n of the opposite direction.',
+      docEquiv: 'The 2n chromosomes that describe the same tour: the n rotations and the n rotations of the reversed tour.',
       docFitness: 'Fitness (length, to be minimised) of chromosome x, repaired if it is not a permutation. Returns the length and the evaluated tour.',
       noChange: 'if x is already a permutation, it does not change',
-      example: 'Example: five cities, a valid chromosome and another with city 2 repeated',
+      example: 'Example: five cities, a valid chromosome and one with city 2 repeated',
     },
   };
 
   const references = [
     C.ref('grefenstette1985', {
       es: 'Uno de los primeros trabajos sobre algoritmos genéticos para el viajante. Compara representaciones (de camino, de adyacencia y ordinal) y muestra que la ordinal admite el cruce clásico a costa de transmitir mal la información de los padres.',
-      en: 'One of the first works on genetic algorithms for the travelling salesman. Compares representations (path, adjacency and ordinal) and shows that the ordinal one allows classic crossover at the cost of passing on the parents’ information poorly.',
+      en: 'One of the first works on genetic algorithms for the travelling salesman problem. Compares representations (path, adjacency and ordinal) and shows that the ordinal one allows classic crossover at the cost of transmitting the parents’ information poorly.',
     }, { original: true }),
     C.ref('talbi', {
       es: 'Manual de referencia del curso. Trata la representación de las soluciones, con las permutaciones como codificación de los problemas de secuenciación, y sus propiedades deseables.',
@@ -323,19 +323,19 @@ if (typeof module !== 'undefined' && module.exports) {
     }),
     C.ref('larranaga', {
       es: 'Revisión de las representaciones (binaria, de camino, de adyacencia, ordinal y matricial) y de los operadores de los algoritmos genéticos para el viajante.',
-      en: 'Review of the representations (binary, path, adjacency, ordinal and matrix) and operators of genetic algorithms for the travelling salesman.',
+      en: 'Review of the representations (binary, path, adjacency, ordinal and matrix) and operators of genetic algorithms for the travelling salesman problem.',
     }),
     C.ref('goldbergLingle', {
       es: 'Propone el cruce PMX, que conserva la permutación, y estudia qué información de los padres pasa a los hijos con la representación de camino.',
-      en: 'Proposes PMX crossover, which preserves the permutation, and studies what information passes from parents to children with path representation.',
+      en: 'Proposes PMX crossover, which preserves the permutation, and studies what information passes from parents to offspring with path representation.',
     }),
     C.ref('dfj', {
       es: 'Formulación clásica del viajante como programa lineal entero, con una variable binaria por arco y restricciones de eliminación de subcircuitos.',
-      en: 'Classic formulation of the travelling salesman as an integer linear program, with one binary variable per arc and subtour elimination constraints.',
+      en: 'Classic formulation of the travelling salesman problem as an integer linear program, with one binary variable per arc and subtour elimination constraints.',
     }),
     C.ref('heldKarp', {
       es: 'Algoritmo de programación dinámica que encuentra el circuito óptimo en O(n² 2ⁿ). Es el que usa la herramienta para mostrar el óptimo.',
-      en: 'Dynamic programming algorithm that finds the optimal tour in O(n² 2ⁿ). It is the one the tool uses to show the optimum.',
+      en: 'Dynamic programming algorithm that finds the optimal tour in O(n² 2ⁿ). The tool uses it to show the optimum.',
     }),
     C.ref('applegate', {
       es: 'Monografía de referencia sobre el problema del viajante: historia, formulaciones y métodos de resolución exacta.',

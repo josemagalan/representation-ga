@@ -176,7 +176,7 @@
         return c.join(' ');
       })
         .attr('tabindex', live ? 0 : -1)
-        .attr('role', live ? 'button' : null)
+        .attr('role', live ? 'button' : 'img')
         .attr('aria-hidden', visible ? null : 'true')
         .attr('aria-label', (d) => t(live ? 'bitGeneAria' : 'bitGeneAriaStatic', { pos: d.j + 1, b: d.v, i: d.j < k ? '₁' : '₂' }))
         .style('pointer-events', live ? null : 'none');
@@ -358,7 +358,7 @@
       });
       sel.classed('out', !!out).classed('draggable', isReal)
         .attr('transform', (d) => `translate(${px(g, d)[0]},${px(g, d)[1]})`)
-        .attr('aria-label', (d) => t(isReal ? 'pointAria' : 'pointAriaBits', { x1: fx(d[0]), x2: fx(d[1]) }));
+        .attr('aria-label', (d) => t(!isReal ? 'pointAriaBits' : (step.practice ? 'pointAriaStatic' : 'pointAria'), { x1: fx(d[0]), x2: fx(d[1]) }));
     }
 
     function drawPanel(g) {
@@ -428,7 +428,7 @@
       drawPoint(g);
       drawPanel(g);
       hit.classed('active', editable()).style('cursor', editable() ? (isReal ? 'crosshair' : 'pointer') : null);
-      gPoint.selectAll('g.fpoint').attr('tabindex', isReal && !step.practice ? 0 : null).attr('role', isReal && !step.practice ? 'button' : null)
+      gPoint.selectAll('g.fpoint').attr('tabindex', isReal && !step.practice ? 0 : null).attr('role', isReal && !step.practice ? 'button' : 'img')
         .classed('draggable', isReal && !step.practice);
     }
 

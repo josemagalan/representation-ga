@@ -158,7 +158,7 @@
         return c.join(' ');
       })
         .attr('tabindex', live ? 0 : -1)
-        .attr('role', live ? 'button' : null)
+        .attr('role', live ? 'button' : 'img')
         .attr('aria-hidden', visible ? null : 'true')
         .attr('aria-label', (d) => (mode === 'int' ? t(live ? 'intGeneAria' : 'intGeneAriaStatic', { i: d.i + 1, j: d.j }) : t(live ? 'bitAria' : 'bitAriaStatic', { i: d.i + 1, j: d.j, b: d.v })))
         .style('pointer-events', live ? null : 'none');

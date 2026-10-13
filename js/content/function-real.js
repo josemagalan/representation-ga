@@ -17,28 +17,28 @@
       'Coste: decodificar un vector de reales no cuesta nada, porque el cromosoma ya es la solución, y comprobar la caja es O(n). Lo caro es evaluar f, que en problemas reales puede ser una simulación de minutos u horas.',
     ],
     en: [
-      'Optimising a continuous function means looking for the lowest (or highest) point of a surface: the variables are real numbers and each can take infinitely many values within some bounds. The tool uses two classic two-variable test functions, so that they can be drawn as a map. Himmelblau’s function (1972) is smooth and has four global minima, all with value 0. Rastrigin’s function, in the n-variable version of Mühlenbein, Schomisch and Born (1991), is a paraboloid covered in ripples, with a grid of local minima and a single global minimum at the origin: a nightmare for a local search.',
-      'The formalisation is direct: two real variables, an objective function to minimise and a box constraint, a ≤ xᵢ ≤ b, which bounds the region where it makes sense to search. The search space is a continuum, with infinitely many points; in the computer, double-precision floating-point numbers, with about fifteen significant digits.',
-      'The real encoding copies the variables: the chromosome is the point itself, one real gene per variable, and genotype and phenotype coincide. The first genetic algorithms encoded everything in binary (Holland, 1975; Goldberg, 1989), but for continuous problems the real representation soon took over: Janikow and Michalewicz (1991) compared it with the binary one and obtained more precise and faster results, and evolution strategies worked with reals from the start (Rechenberg, 1973). Herrera, Lozano and Verdegay (1998) review its operators.',
-      'It meets the properties Talbi (2009) asks of a representation: it is complete (any point of the box can be written, with machine precision), connected and efficient, and its locality is as good as it gets: changing a gene a little moves the point a little, in the direction of that variable. That is why Gaussian mutation, which adds a small noise to a gene, and crossovers that combine the parents’ values, such as arithmetic or BLX-α crossover, make sense here: the gene is an ordinal quantity, not a label like the machine number in the assignment. In the tool the genes are rounded to hundredths only so that the narration shows exactly the numbers being used.',
-      'The downside is that nothing prevents a gene from leaving the box: a Gaussian mutation or a crossover that extrapolates beyond the parents can leave xᵢ below a or above b. There are three usual treatments. Clamping (projecting) takes each gene that leaves to the nearest bound; it is the simplest, but all points that leave on the same side end up at the same point of the boundary, and the population piles up there: it helps if the optimum is on the boundary and hinders if it is not. Reflecting bounces the gene off the bound, by as much as it had overshot, and does not pile points up on the boundary. Penalising does not change the point: it evaluates it as it is and adds λ · d, with d the distance to the box.',
-      'Penalising requires being able to compute f outside the box. With these test functions it can be done, but in a real problem it often cannot: a negative length or an impossible dose has no value to evaluate. The alternative is to design the operators so that they never leave the box, for example a bounded mutation, which is the idea of the knapsack decoder: choose operators that only produce valid solutions. Both when clamping and when reflecting, the corrected point can be written back into the chromosome (Lamarckian learning) or used only for evaluation (Baldwin effect); the tool does the latter, as did Orvosh and Davis (1993) in their study on when to repair.',
-      'Cost: decoding a real vector costs nothing, because the chromosome already is the solution, and checking the box is O(n). The expensive part is evaluating f, which in real problems may be a simulation lasting minutes or hours.',
+      'Optimising a continuous function means looking for the lowest (or highest) point of a surface: the variables are real numbers and each can take infinitely many values within certain bounds. The tool uses two classic test functions of two variables, so that they can be drawn as a map. The Himmelblau function (Himmelblau, 1972) is smooth and has four global minima, all with value 0. The Rastrigin function, in the n-variable version by Mühlenbein, Schomisch and Born (1991), is a paraboloid covered in ripples, with a grid of local minima and a single global minimum at the origin: a nightmare for local search.',
+      'The formalisation is straightforward: two real variables, an objective function to minimise and a box constraint, a ≤ xᵢ ≤ b, which bounds the region where it makes sense to search. The search space is a continuum, with infinitely many points; on a computer, it is the set of double-precision floating-point numbers, with about fifteen significant digits.',
+      'The real encoding copies the variables: the chromosome is the point itself, one real gene per variable, and genotype and phenotype coincide. The first genetic algorithms encoded everything in binary (Holland, 1975; Goldberg, 1989), but for continuous problems the real representation soon took over: Janikow and Michalewicz (1991) compared it with binary encoding and obtained faster, more precise results, and evolution strategies had worked with real numbers from the start (Rechenberg, 1973). Herrera, Lozano and Verdegay (1998) review its operators.',
+      'It has the properties that Talbi (2009) requires of a representation: it is complete (any point in the box can be represented, to machine precision), connected and efficient, and its locality is as good as it gets: changing a gene a little moves the point a little, in the direction of that variable. That is why Gaussian mutation, which adds a small amount of noise to a gene, and crossovers that combine the parents’ values, such as arithmetic or BLX-α crossover, make sense here: the gene is an ordinal quantity, not a label like the machine number in the assignment problem. In the tool, genes are rounded to hundredths only so that the narration shows exactly the numbers being used.',
+      'The downside is that nothing prevents a gene from leaving the box: a Gaussian mutation or a crossover that extrapolates beyond the parents can leave xᵢ below a or above b. There are three common ways of dealing with this. Clamping (projection) moves each gene that leaves the box to the nearest bound; it is the simplest, but all points that leave on the same side end up at the same point on the boundary, and the population piles up there: this helps if the optimum lies on the boundary and hinders if it does not. Reflecting bounces the gene off the bound by the same amount it overshot, and does not pile points up on the boundary. Penalising does not change the point: it evaluates it as it is and adds λ · d, where d is the distance to the box.',
+      'Penalising requires being able to compute f outside the box. This is possible with these test functions, but often not in a real problem: a negative length or an impossible dose has no value to evaluate. The alternative is to design the operators so that they never leave the box, for example with a bounded mutation; this is the same idea as the knapsack decoder: choosing operators that only produce valid solutions. With both clamping and reflecting, the corrected point can be written back into the chromosome (Lamarckian learning) or used only for evaluation (Baldwin effect); the tool does the latter, as did Orvosh and Davis (1993) in their study of when to repair.',
+      'Cost: decoding a real vector costs nothing, because the chromosome is already the solution, and checking the box is O(n). The expensive part is evaluating f, which in real problems may be a simulation lasting minutes or hours.',
     ],
   };
 
   const variants = {
     clamp: {
       name: { es: 'Acotar', en: 'Clamp' },
-      desc: { es: 'Cada gen que se sale de [a, b] se lleva al límite más cercano.', en: 'Each gene that leaves [a, b] is taken to the nearest bound.' },
+      desc: { es: 'Cada gen que se sale de [a, b] se lleva al límite más cercano.', en: 'Each gene that leaves [a, b] is moved to the nearest bound.' },
     },
     reflect: {
       name: { es: 'Reflejar', en: 'Reflect' },
-      desc: { es: 'Cada gen que se sale rebota en el límite que ha cruzado, tanto como se había pasado (otra vez, si hace falta).', en: 'Each gene that leaves bounces off the bound it crossed, by as much as it had overshot (again, if needed).' },
+      desc: { es: 'Cada gen que se sale rebota en el límite que ha cruzado, tanto como se había pasado (otra vez, si hace falta).', en: 'Each gene that leaves the box bounces off the bound it crossed, by the same amount it overshot (repeatedly, if needed).' },
     },
     penalty: {
       name: { es: 'Penalizar', en: 'Penalise' },
-      desc: { es: 'El punto se evalúa tal cual y se le suma λ · d, con d = Σᵢ máx(0, a − xᵢ, xᵢ − b), la distancia a la caja.', en: 'The point is evaluated as it is and λ · d is added, with d = Σᵢ max(0, a − xᵢ, xᵢ − b), the distance to the box.' },
+      desc: { es: 'El punto se evalúa tal cual y se le suma λ · d, con d = Σᵢ máx(0, a − xᵢ, xᵢ − b), la distancia a la caja.', en: 'The point is evaluated as it is and λ · d is added, where d = Σᵢ max(0, a − xᵢ, xᵢ − b) is the distance to the box.' },
     },
   };
 
@@ -76,28 +76,28 @@
       penalty: 'Penalizar: el punto no se cambia. Se evalúa tal cual, f = {fx}, y se le suma λ · d = {lambda} · {d} = {pen}: aptitud {fit}. Exige poder calcular f fuera de la caja, que en un problema real puede no tener sentido (una longitud negativa, una dosis imposible).',
     },
     en: {
-      problemHimmelblau: 'We are looking for the lowest point of a surface: Himmelblau’s function on the square [{a}, {b}]². On the map, the more intense the blue, the lower. It has four equally deep valleys, and no formula gives the minimum directly: it has to be searched for.',
-      problemRastrigin: 'We are looking for the lowest point of a surface: Rastrigin’s function on the square [{a}, {b}]². On the map, the more intense the blue, the lower. It is a bowl covered in ripples: a grid of local minima and a single global minimum, in the centre.',
-      formVars: 'First, what is decided: two real numbers, x₁ and x₂, the coordinates of the point. Unlike the knapsack or the assignment, each variable can take infinitely many values.',
+      problemHimmelblau: 'We are looking for the lowest point of a surface: the Himmelblau function on the square [{a}, {b}]². On the map, the more intense the blue, the lower the point. It has four equally deep valleys, and no formula gives the minimum directly: it has to be searched for.',
+      problemRastrigin: 'We are looking for the lowest point of a surface: the Rastrigin function on the square [{a}, {b}]². On the map, the more intense the blue, the lower the point. It is a bowl covered in ripples: a grid of local minima and a single global minimum, in the centre.',
+      formVars: 'First, what is decided: two real numbers, x₁ and x₂, the coordinates of the point. Unlike in the knapsack or assignment problems, each variable can take infinitely many values.',
       formObjHimmelblau: 'Second, what we want: to minimise f(x₁, x₂) = (x₁² + x₂ − 11)² + (x₁ + x₂² − 7)². Being a sum of squares, it never goes below 0, and it is 0 exactly where both brackets vanish at once.',
       formObjRastrigin: 'Second, what we want: to minimise f(x₁, x₂) = 20 + Σᵢ (xᵢ² − 10 cos 2πxᵢ). The xᵢ² term gives the bowl shape, and the cosine adds a local minimum near every point with integer coordinates.',
-      formCons: 'Third, what cannot be done: leaving the box. Each variable must stay between a = {a} and b = {b}; it is the only constraint.',
-      formSpaceHimmelblau: 'The search space is the square [{a}, {b}]², a continuum with infinitely many points. The minimum is 0 and is reached at four points, the stars: (3; 2) and three others without a simple expression.',
+      formCons: 'Third, what cannot be done: leaving the box. Each variable must stay between a = {a} and b = {b}; this is the only constraint.',
+      formSpaceHimmelblau: 'The search space is the square [{a}, {b}]², a continuum with infinitely many points. The minimum is 0 and is reached at four points, the stars: (3; 2) and three others with no simple closed form.',
       formSpaceRastrigin: 'The search space is the square [{a}, {b}]², a continuum with infinitely many points. The minimum is 0 and lies at the origin, the star; around it there are dozens of local minima in which a local search would get trapped.',
       encode: 'Encoding: the chromosome is the point itself, ({x1}; {x2}), one real gene per variable. Genotype and phenotype coincide. Drag the point across the map to change the genes.',
-      decodeIntro: 'Decoding is almost immediate here, because each gene is directly the value of its variable. Even so, let us see it gene by gene.',
-      decodeGene1: 'Gene 1 = {x}: it is x₁, the horizontal coordinate (the vertical line on the map).',
-      decodeGene2: 'Gene 2 = {x}: it is x₂, the vertical coordinate (the horizontal line). Where the two lines cross is the point.',
+      decodeIntro: 'Decoding is almost immediate here, because each gene is directly the value of its variable. Even so, let us go through it gene by gene.',
+      decodeGene1: 'Gene 1 = {x}: this is x₁, the horizontal coordinate (the vertical line on the map).',
+      decodeGene2: 'Gene 2 = {x}: this is x₂, the vertical coordinate (the horizontal line). The point lies where the two lines cross.',
       decodeDone: 'The point ({x1}; {x2}) is at a height f = {fx}. The optimum is {opt}, at the stars: any higher point can be improved.',
       decodeDoneOut: 'The point ({x1}; {x2}) is outside the box. The formula for f can still be computed (it gives {fx}), but the point is not a feasible solution: the validity stage decides what to do with it.',
-      validIn: 'Validity: both genes are between {a} and {b}, so the point is feasible and its fitness is f = {fx}. The three box treatments have nothing to do; try dragging the point outside.',
-      localityReal: 'The real encoding has perfect locality: changing a gene a little moves the point a little, in the direction of that variable. That is why Gaussian mutation, which adds a small noise, and crossovers that average the parents’ values make sense: the gene is a quantity, not a label like the machine number in the assignment.',
-      validOut1: 'Validity: gene 1 (x₁) leaves [{a}, {b}]; the point is at a distance d = {d} from the box. With reals, this happens as soon as a Gaussian mutation or an extrapolating crossover pushes a gene beyond the bound.',
-      validOut2: 'Validity: gene 2 (x₂) leaves [{a}, {b}]; the point is at a distance d = {d} from the box. With reals, this happens as soon as a Gaussian mutation or an extrapolating crossover pushes a gene beyond the bound.',
-      validOutBoth: 'Validity: both genes leave [{a}, {b}]; adding up how far each one overshoots, the point is at a distance d = {d} from the box. With reals, this happens as soon as a Gaussian mutation or an extrapolating crossover pushes the genes beyond the bounds.',
-      clamp: 'Clamping: each gene that leaves is taken to the nearest bound, so ({x1}; {x2}) is evaluated as ({c1}; {c2}), with f = {fc}. It is the simplest, but all points that leave on the same side end up at the same point of the boundary, and the population piles up there.',
-      reflect: 'Reflecting: the gene that leaves bounces off the bound, as in a mirror, by as much as it had overshot, so ({x1}; {x2}) is evaluated as ({c1}; {c2}), with f = {fc}. Unlike clamping, it does not pile points up on the boundary.',
-      penalty: 'Penalising: the point is not changed. It is evaluated as it is, f = {fx}, and λ · d = {lambda} · {d} = {pen} is added: fitness {fit}. It requires being able to compute f outside the box, which in a real problem may make no sense (a negative length, an impossible dose).',
+      validIn: 'Validity: both genes are between {a} and {b}, so the point is feasible and its fitness is f = {fx}. None of the three box treatments has anything to do; try dragging the point outside the box.',
+      localityReal: 'The real encoding has perfect locality: changing a gene a little moves the point a little, in the direction of that variable. That is why Gaussian mutation, which adds a small amount of noise, and crossovers that average the parents’ values make sense: the gene is a quantity, not a label like the machine number in the assignment problem.',
+      validOut1: 'Validity: gene 1 (x₁) leaves [{a}, {b}]; the point is at a distance d = {d} from the box. With real-valued genes, this happens whenever a Gaussian mutation or an extrapolating crossover pushes a gene beyond the bound.',
+      validOut2: 'Validity: gene 2 (x₂) leaves [{a}, {b}]; the point is at a distance d = {d} from the box. With real-valued genes, this happens whenever a Gaussian mutation or an extrapolating crossover pushes a gene beyond the bound.',
+      validOutBoth: 'Validity: both genes leave [{a}, {b}]; adding up how far each one overshoots, the point is at a distance d = {d} from the box. With real-valued genes, this happens whenever a Gaussian mutation or an extrapolating crossover pushes the genes beyond the bounds.',
+      clamp: 'Clamping: each gene that leaves the box is moved to the nearest bound, so ({x1}; {x2}) is evaluated as ({c1}; {c2}), with f = {fc}. This is the simplest treatment, but all points that leave on the same side end up at the same point on the boundary, and the population piles up there.',
+      reflect: 'Reflecting: the gene that leaves the box bounces off the bound, as in a mirror, by the same amount it overshot, so ({x1}; {x2}) is evaluated as ({c1}; {c2}), with f = {fc}. Unlike clamping, it does not pile points up on the boundary.',
+      penalty: 'Penalising: the point is not changed. It is evaluated as it is, f = {fx}, and λ · d = {lambda} · {d} = {pen} is added, giving a fitness of {fit}. It requires being able to compute f outside the box, which in a real problem may make no sense (a negative length, an impossible dose).',
     },
   };
 
@@ -116,7 +116,7 @@
     en: {
       sig: (vr) => (vr === 'penalty' ? 'EVALUATE_REAL(x, f, a, b, λ)' : 'EVALUATE_REAL(x, f, a, b)'),
       dec: '(x₁, x₂) ← (gene 1, gene 2)        // the chromosome is the point',
-      check: 'if some xᵢ < a or xᵢ > b:',
+      check: 'if any xᵢ < a or xᵢ > b:',
       clamp: 'for i = 1, 2: xᵢ ← min(b, max(a, xᵢ))',
       reflect: 'for i = 1, 2: while xᵢ < a or xᵢ > b:',
       reflect2: 'if xᵢ < a: xᵢ ← 2a − xᵢ;  else: xᵢ ← 2b − xᵢ',
@@ -294,22 +294,22 @@ if (typeof module !== 'undefined' && module.exports) {
       example: 'Ejemplo: un mínimo de Himmelblau y un punto que se sale por la derecha',
     },
     en: {
-      title: 'Optimisation of a two-variable continuous function with a real vector: evaluation with the box bounds.',
+      title: 'Optimisation of a continuous function of two variables with a real-valued vector: evaluation with box-bound handling.',
       ref: 'References: Janikow, C. Z. & Michalewicz, Z. (1991); Michalewicz, Z. (1996); Talbi, E.-G. (2009); Bautista-Valhondo, J. (2020).',
       docFunctions: 'Each function, with its box [a, b] for both variables. Both are minimised; their global minimum is 0.',
-      docClamp: 'Clamp: each gene outside [a, b] is taken to the nearest bound (in hundredths, like the tool).',
+      docClamp: 'Clamp: each gene outside [a, b] is taken to the nearest bound (working in hundredths, as the tool does).',
       docReflect: 'Reflect: each gene outside [a, b] bounces off the bound it crossed, as many times as needed.',
-      cents: 'in whole hundredths: the result is exact',
-      docDistance: 'Distance to the box: how far each gene leaves it, added up; 0 if the point is inside.',
-      docFitness: 'Fitness (to be minimised) of chromosome x = [x1, x2]. method = "clamp" or "reflect": f of the corrected point. method = "penalty": f of the point as it is + lam · distance to the box. Returns the fitness and the evaluated point.',
-      example: 'Example: a minimum of Himmelblau’s function and a point that leaves on the right',
+      cents: 'in integer hundredths, so the result is exact',
+      docDistance: 'Distance to the box: the sum of how far each gene lies outside it; 0 if the point is inside.',
+      docFitness: 'Fitness (to be minimised) of the chromosome x = [x1, x2]. method = "clamp" or "reflect": f of the corrected point. method = "penalty": f of the point as it is + lam · distance to the box. Returns the fitness and the evaluated point.',
+      example: 'Example: a minimum of the Himmelblau function and a point that leaves the box on the right',
     },
   };
 
   const references = [
     C.ref('janikowMichalewicz', {
       es: 'Comparan experimentalmente la codificación binaria y la de coma flotante en problemas continuos: la real resulta más rápida, más precisa y más fácil de adaptar con operadores propios.',
-      en: 'They experimentally compare binary and floating-point encodings on continuous problems: the real one turns out faster, more precise and easier to tailor with its own operators.',
+      en: 'They experimentally compare binary and floating-point encodings on continuous problems: the real-valued one proves faster, more precise and easier to tailor with its own operators.',
     }, { original: true }),
     C.ref('talbi', {
       es: 'Manual de referencia del curso. Trata la representación de las soluciones (incluida la real y la binaria de variables continuas), sus propiedades deseables y el manejo de restricciones.',
@@ -329,11 +329,11 @@ if (typeof module !== 'undefined' && module.exports) {
     }),
     C.ref('himmelblau1972', {
       es: 'Libro de programación no lineal en el que aparece la función de prueba con cuatro mínimos globales que lleva su nombre.',
-      en: 'Nonlinear programming book in which the test function with four global minima that bears his name appears.',
+      en: 'Nonlinear programming book that presents the test function bearing his name, with its four global minima.',
     }),
     C.ref('muhlenbein1991', {
       es: 'Algoritmo genético paralelo probado sobre funciones clásicas; introduce la versión de n variables de la función de Rastrigin que se usa hoy.',
-      en: 'Parallel genetic algorithm tested on classic functions; introduces the n-variable version of Rastrigin’s function used today.',
+      en: 'Parallel genetic algorithm tested on classic functions; introduces the n-variable version of the Rastrigin function that is used today.',
     }),
     C.ref('orvoshDavis', {
       es: 'Estudian cuándo conviene escribir en el cromosoma la solución reparada y cuándo usarla solo para evaluar.',

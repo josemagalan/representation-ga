@@ -9,8 +9,10 @@
   --p1-ink: #ffffff;
   --p2-ink: #1c1c1f;
   --p1-text: #0067a0;
+  --p1-strong: #005a8c;   /* p1-text sobre la línea resaltada del código (AA) */
   --p2-text: #9a6400;
   --conflict: #d55e00;    /* Okabe-Ito bermellón */
+  --conflict-text: #b34a00; /* bermellón oscurecido: texto con contraste AA sobre blanco y fondo */
   --wide: #009e73;        /* Okabe-Ito verde azulado */
   --mut: #cc79a7;         /* Okabe-Ito púrpura rojizo: gen mutado */
   --mut-ink: #1c1c1f;
@@ -36,8 +38,10 @@
     --p1-ink: #0b1b26;
     --p2-ink: #1c1c1f;
     --p1-text: #7cc6f0;
+    --p1-strong: #7cc6f0;
     --p2-text: #f2b53a;
     --conflict: #ff7a33;
+    --conflict-text: #ff7a33;
     --wide: #33c99b;
     --mut: #e396c3;
     --mut-ink: #1c1c1f;
@@ -339,7 +343,7 @@ summary {
 .manual-grid label { font-weight: 600; font-size: 0.9rem; }
 .manual-grid input { width: 100%; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
 .manual-actions { display: flex; align-items: center; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
-.error { margin: 0; color: var(--conflict); font-weight: 600; font-size: 0.92rem; }
+.error { margin: 0; color: var(--conflict-text); font-weight: 600; font-size: 0.92rem; }
 .hint { margin: 0; color: var(--muted); font-size: 0.86rem; }
 
 /* Escenario */
@@ -671,6 +675,7 @@ summary {
 .code .line.pseudo { padding-left: calc(18px + var(--indent, 0) * 2.2ch); }
 .code .line.current { background: color-mix(in srgb, var(--accent) 22%, transparent); border-left-color: var(--accent); }
 .code .kw { font-weight: 700; color: var(--p1-text); }
+.code .line.current .kw { color: var(--p1-strong); }
 .code .comment { color: var(--muted); font-style: italic; }
 .code[data-kind="pseudo"] { font-size: 1.02rem; }
 .code[data-kind="pseudo"] code { min-width: 0; }
@@ -1016,7 +1021,8 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 .formula-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
 .formula-math { font-size: 1.15rem; padding: 3px 8px; border-radius: 8px; border: 2px solid transparent; transition: opacity 0.25s, border-color 0.2s, background 0.2s; justify-self: start; }
 .formula-math math { font-size: 1.1em; }
-.formula-row.pending .formula-label, .formula-row.pending .formula-math { opacity: 0.25; }
+/* Lo que aún no ha llegado se ve en gris atenuado, pero legible (contraste AA): la etapa avanza sin ocultar texto */
+.formula-row.pending .formula-math { color: var(--muted); }
 .formula-row.current .formula-label { color: var(--ink); }
 .formula-row.current .formula-math { border-color: var(--accent); background: var(--card); }
 .formula-instance { margin-top: 8px; }
@@ -1069,7 +1075,7 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 .sw-skipped { background: var(--card); border: 2px dashed var(--conflict); }
 
 .treat-table td.num { font-variant-numeric: tabular-nums; }
-.treat-table td.over { color: var(--conflict); font-weight: 600; }
+.treat-table td.over { color: var(--conflict-text); font-weight: 600; }
 .treat-table td.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0.12em; }
 .treat-table .bit-changed { color: var(--mut); font-weight: 700; text-decoration: underline; }
 .treat-table tr.current { background: var(--band); }
@@ -1121,7 +1127,7 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 .sw-tour-repeat { background: repeating-linear-gradient(90deg, var(--conflict) 0 7px, transparent 7px 11px); }
 .sw-city-missing { border-radius: 50%; background: var(--card); border: 3px dashed var(--conflict); }
 .enc-extra:empty { display: none; }
-.formula-math { max-width: 100%; overflow-x: auto; }
+.formula-math { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding-block: 6px; }
 
 /* ---------- Asignación de tareas a máquinas ---------- */
 .task-head { fill: var(--muted); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -1254,7 +1260,7 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 .pr-item { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; border-radius: 8px; padding: 2px; }
 .pr-item.pr-bit { align-items: center; }
 .pr-cap { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
-.pr-fix { font-size: 0.8rem; font-weight: 700; color: var(--conflict); min-height: 0; }
+.pr-fix { font-size: 0.8rem; font-weight: 700; color: var(--conflict-text); min-height: 0; }
 .pr-fix:empty { display: none; }
 .pr-item.ok { box-shadow: 0 0 0 2px var(--wide); }
 .pr-item.bad { box-shadow: 0 0 0 2px var(--conflict); }

@@ -89,7 +89,7 @@
         return c.join(' ');
       })
         .attr('tabindex', live ? 0 : -1)
-        .attr('role', live ? 'button' : null)
+        .attr('role', live ? 'button' : 'img')
         .attr('aria-hidden', visible ? null : 'true')
         .attr('aria-pressed', (d) => (live ? (picked === d.i ? 'true' : 'false') : null))
         .attr('aria-label', (d) => t(live ? 'permGeneAria' : 'permGeneAriaStatic', { pos: d.i + 1, city: d.c }))
