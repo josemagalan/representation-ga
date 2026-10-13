@@ -95,7 +95,8 @@
     const scroll = C.el('div', 'table-scroll');
     const table = C.el('table', 'cmp-table both-table', { id: 'threeTable' });
     scroll.append(table);
-    card.append(sameLine, scroll);
+    const cmpLink = C.el('a', 'cmp-link cmp-link-inline');
+    card.append(sameLine, scroll, cmpLink);
     const extras = [card];
     let treatCard = null;
     let treatTable = null;
@@ -164,6 +165,13 @@
         tbody.append(tr);
       });
       table.replaceChildren(thead, tbody);
+      const q = new URLSearchParams({ cmp: 'function', lang: ctx.lang(), from: content.id, fn: s.fn, k: String(kk), x: realHash(isReal ? p : p.map(Fn.round2)) });
+      if (!isReal) q.set('v', s.variant);
+      cmpLink.href = `#${q.toString()}`;
+      cmpLink.replaceChildren(C.el('span'), C.el('span'));
+      cmpLink.firstChild.textContent = t('cmpLink');
+      cmpLink.lastChild.textContent = '→';
+      cmpLink.lastChild.setAttribute('aria-hidden', 'true');
     }
 
     function renderTreat() {
@@ -289,6 +297,17 @@
         return items;
       },
       variant: () => s.variant,
+      getPage: () => (isReal
+        ? { fn: s.fn, x: s.x.slice(), variant: s.variant, lambda: s.lambda }
+        : { fn: s.fn, k: s.k, variant: s.variant, x: s.x.slice() }),
+      setPage(p) {
+        s.fn = p.fn;
+        s.variant = p.variant;
+        if (isReal) s.lambda = p.lambda; else s.k = p.k;
+        s.x = p.x.slice();
+        manual.clearError();
+        sync();
+      },
       editHintKey: isReal ? 'editHintReal' : 'editHintBits',
       formulaArg: () => s.fn,
       formatParam(name, v) {

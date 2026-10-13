@@ -88,7 +88,8 @@
     const scroll = C.el('div', 'table-scroll');
     const table = C.el('table', 'cmp-table both-table', { id: 'bothTable' });
     scroll.append(table);
-    card.append(sameLine, scroll);
+    const cmpLink = C.el('a', 'cmp-link cmp-link-inline');
+    card.append(sameLine, scroll, cmpLink);
     ctx.extraEl.replaceChildren(card);
 
     /** Asignación que evalúa la página (null si la matriz es infactible y se penaliza). */
@@ -148,6 +149,14 @@
         tbody.append(tr);
       });
       table.replaceChildren(thead, tbody);
+      // Comparar: con la asignación que evalúa la página (la reparada, si la matriz es infactible)
+      const ca = a || A.fromMatrix(P.repair(s.inst, s.x).matrix);
+      const q = new URLSearchParams({ cmp: 'assignment', lang: ctx.lang(), from: content.id, s: String(s.seed), n: String(s.n), m: String(s.m), p: pSerial(), a: ca.join('-') });
+      cmpLink.href = `#${q.toString()}`;
+      cmpLink.replaceChildren(C.el('span'), C.el('span'));
+      cmpLink.firstChild.textContent = t('cmpLink');
+      cmpLink.lastChild.textContent = '→';
+      cmpLink.lastChild.setAttribute('aria-hidden', 'true');
     }
 
     function fmtShare(v) {
@@ -251,6 +260,21 @@
         return items;
       },
       variant: () => (isMatrix ? s.variant : 'int'),
+      getPage() {
+        const p = { inst: s.inst, x: isMatrix ? s.x.map((r) => r.slice()) : s.x.slice(), seed: s.seed };
+        if (isMatrix) { p.variant = s.variant; p.lambda = s.lambda; }
+        return p;
+      },
+      setPage(p) {
+        if (p.inst !== s.inst) { s.inst = p.inst; s.opt = A.optimum(s.inst); }
+        s.n = s.inst.p.length;
+        s.m = s.inst.p[0].length;
+        s.x = isMatrix ? p.x.map((r) => r.slice()) : p.x.slice();
+        if (isMatrix) { s.variant = p.variant; s.lambda = p.lambda; }
+        if (p.seed != null) s.seed = p.seed;
+        manual.clearError();
+        sync();
+      },
       editHintKey: isMatrix ? 'editHintMatrix' : 'editHintInt',
       formulaInstance: (res) => (isMatrix
         ? t('formulaInstanceMatrix', { n: s.n, m: s.m, total: fmt(res.stats.total), feasible: fmt(res.stats.feasible), opt: res.stats.optimum })

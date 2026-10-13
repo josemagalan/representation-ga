@@ -49,6 +49,7 @@
       thanksTitle: 'Agradecimientos',
       thanks: 'Agradecemos al programa Claude for Science de Anthropic su apoyo al desarrollo de esta herramienta, que se ha realizado con la ayuda de Claude.',
       foot: 'Acerca de',
+      footMoodle: 'Preguntas para Moodle',
       footSister: 'Herramientas hermanas:',
       footSisters: { selection: 'selección', crossover: 'cruce', mutation: 'mutación' },
       footLicence: 'Código MIT · Textos CC BY 4.0',
@@ -69,6 +70,7 @@
       thanksTitle: 'Acknowledgements',
       thanks: 'We thank Anthropic’s Claude for Science programme for supporting the development of this tool, which was built with the help of Claude.',
       foot: 'About',
+      footMoodle: 'Questions for Moodle',
       footSister: 'Sister tools:',
       footSisters: { selection: 'selection', crossover: 'crossover', mutation: 'mutation' },
       footLicence: 'Code MIT · Texts CC BY 4.0',
@@ -167,7 +169,9 @@
     about.href = `#page=about&lang=${lang}`;
     const gh = node('a', null, 'GitHub');
     gh.href = REPO;
-    links.append(about, document.createTextNode(` · ${T.footSister} `));
+    const moodle = node('a', null, T.footMoodle);
+    moodle.href = `#page=moodle&lang=${lang}`;
+    links.append(about, document.createTextNode(' · '), moodle, document.createTextNode(` · ${T.footSister} `));
     SISTER_ORDER.forEach((k, i) => {
       if (i) links.append(document.createTextNode(', '));
       const a = node('a', null, T.footSisters[k]);

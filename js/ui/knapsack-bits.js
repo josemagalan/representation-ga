@@ -158,6 +158,18 @@
         return items;
       },
       variant: () => s.variant,
+      /** Estado de la página para el modo práctica (js/practice.js) y su vuelta. */
+      getPage: () => ({ inst: s.inst, x: s.x.slice(), variant: s.variant, lambda: s.lambda, draw: s.draw, seed: s.seed }),
+      setPage(p) {
+        s.inst = p.inst;
+        s.x = p.x.slice();
+        s.variant = p.variant;
+        s.lambda = p.lambda;
+        s.draw = p.draw;
+        if (p.seed != null) s.seed = p.seed;
+        manual.clearError();
+        sync();
+      },
       formulaInstance: (res) => t('formulaInstance', { n: s.inst.weights.length, W: s.inst.capacity, total: res.stats.total, feasible: res.stats.feasible, opt: res.stats.optimum }),
       onLanguage() { lambda.refresh(); manual.refresh(); sync(); },
     };

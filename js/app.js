@@ -5,18 +5,22 @@
  *
  * URL: #lang=es                          → pantalla inicial
  *      #enc=<id>&lang=es&…&step=…        → página de una codificación (el resto, según js/ui/<id>.js)
+ *      …&practice=<tipo>                  → la misma página en modo práctica (js/practice.js)
+ *      #cmp=assignment|function&…         → comparar codificaciones (js/compare-view.js)
+ *      #page=moodle&lang=es              → bancos de preguntas para Moodle (js/moodle-page.js)
  *      #page=about&lang=es               → acerca de
  * También se acepta ?lang=es en la dirección, como en el portal de la serie.
  */
 (function () {
   'use strict';
   const G = window.GAX;
-  const { rng: R, i18n, registry, createHome, createLearnPanel } = G;
+  const { rng: R, i18n, registry, createHome, createLearnPanel, practice: PR } = G;
 
   const $ = (id) => document.getElementById(id);
   const el = {
     homeView: $('homeView'), repGrid: $('repGrid'), encView: $('encView'),
-    aboutView: $('aboutView'), aboutBody: $('aboutBody'), siteFoot: $('siteFoot'),
+    aboutView: $('aboutView'), aboutBody: $('aboutBody'), siteFoot: $('siteFoot'), cmpView: $('cmpView'),
+    moodleView: $('moodleView'), moodleBody: $('moodleBody'), moodleLink: $('moodleLink'),
     encEyebrow: $('encEyebrow'), encTitle: $('encTitle'), encSubtitle: $('encSubtitle'),
     encControls: $('encControls'), encExtra: $('encExtra'),
     stageStrip: $('stageStrip'), formulaCard: $('formulaCard'), formulaRows: $('formulaRows'), formulaInstance: $('formulaInstance'),
@@ -24,6 +28,7 @@
     btnReset: $('btnReset'), btnPrev: $('btnPrev'), btnPlay: $('btnPlay'), btnNext: $('btnNext'),
     counter: $('stepCounter'), barFill: $('barFill'), speed: $('speed'), speedOut: $('speedOut'),
     narration: $('narration'), legend: $('legend'),
+    playerBox: $('playerBox'), narrationBox: $('narrationBox'), btnPractice: $('btnPractice'), practiceCard: $('practiceCard'),
   };
 
   const fromQuery = new URLSearchParams(location.search).get('lang');
@@ -34,6 +39,10 @@
     encId: null,
     ui: null,
     result: null, step: 0, playing: false, timer: null, speed: 1,
+    practice: null,   // tipo de ejercicio mientras se practica (null: paso a paso)
+    ex: null,         // ejercicio de js/practice.js
+    prStep: null,     // paso que dibuja la vista mientras se practica
+    prRoute: null,    // circuito que va marcando el estudiante (viajante)
   };
 
   // ---------- Textos y números ----------
@@ -69,15 +78,20 @@
   }
 
   const home = createHome(el.repGrid, { registry, t, lang: () => state.lang });
+  const moodlePage = G.moodlePage.createMoodlePage();
+  const cmpPage = G.createComparePage({ root: el.cmpView, t, lang: () => state.lang, onChange: () => writeHash() });
   let learn = null;
 
   // ---------- Modelo ----------
 
-  const curStep = () => state.result && state.result.steps[state.step];
+  const baseStep = () => state.result && state.result.steps[state.step];
+  /** Paso que se dibuja: el del paso a paso o, practicando, el del ejercicio. */
+  const curStep = () => (state.practice && state.prStep ? state.prStep : baseStep());
 
   function recompute(stepMode) {
-    const prev = curStep();
+    const prev = baseStep();
     state.result = state.ui.run();
+    if (state.practice) buildExercise();
     const steps = state.result.steps;
     if (stepMode === 'start') state.step = 0;
     else if (stepMode === 'end') state.step = steps.length - 1;
@@ -89,6 +103,92 @@
     renderLegend();
     renderAll(false);
   }
+
+  // ---------- Practicar ----------
+
+  const samePage = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+  /** Ejercicio sobre la página actual (con el tratamiento o el cromosoma que pida el tipo). */
+  function buildExercise() {
+    let ex = PR.exercise(state.encId, state.practice, state.ui.getPage());
+    if (!samePage(ex.page, state.ui.getPage())) {
+      state.ui.setPage(ex.page);
+      state.result = state.ui.run();
+      ex = PR.exercise(state.encId, state.practice, state.ui.getPage());
+    }
+    state.ex = ex;
+    state.prRoute = null;
+    state.prStep = practiceStep();
+    panel.render(ex, PR.typesFor(state.encId));
+  }
+
+  function practiceStep() {
+    const ex = state.ex;
+    const steps = state.result.steps;
+    const base = steps.find((s) => s.type === ex.view.type) || steps[steps.length - 1];
+    return Object.assign({}, base, {
+      practice: true, hideGenes: !!ex.view.hideGenes,
+      focus: [], cells: [], changed: [], skipped: [], removed: [], cliff: null, neighbours: null, active: null,
+      treated: null, result: null, pickCities: !!ex.view.route, userRoute: ex.view.route ? (state.prRoute || []) : null,
+    });
+  }
+
+  function solutionIndex() {
+    const steps = state.result.steps;
+    const sol = state.ex.solution;
+    if (sol.last) return steps.length - 1;
+    const k = steps.findIndex((s) => sol.types.indexOf(s.type) !== -1);
+    return k >= 0 ? k : steps.length - 1;
+  }
+
+  function setPracticeView(on) {
+    el.playerBox.hidden = on;
+    el.narrationBox.hidden = on;
+    el.encExtra.hidden = on;          // las tablas de la página darían la respuesta
+    el.practiceCard.hidden = !on;
+    el.btnPractice.textContent = t(on ? 'exitPractice' : 'practiceMode');
+    el.btnPractice.setAttribute('aria-pressed', String(on));
+  }
+
+  function enterPractice(type) {
+    stop();
+    state.practice = type;
+    setPracticeView(true);
+    recompute('keep');
+  }
+
+  function exitPractice(toSolution) {
+    const idx = toSolution && state.ex ? solutionIndex() : null;
+    state.practice = null;
+    state.ex = null;
+    state.prStep = null;
+    setPracticeView(false);
+    if (idx != null) state.step = idx;
+    renderAll(false);
+    if (toSolution) el.viz.scrollIntoView({ block: 'nearest' });
+  }
+
+  const panel = G.createPracticePanel({
+    root: el.practiceCard, t, lang: () => state.lang,
+    onType(type) { state.practice = type; recompute('keep'); },
+    onNew() {
+      state.ui.setPage(PR.newPage(state.encId, state.practice, R.newSeed() % 1000000, state.ui.getPage()));
+      recompute('start');
+    },
+    onSolution: () => exitPractice(true),
+    onRoute(route) {
+      state.prRoute = route;
+      if (state.practice && state.prStep && state.ex.view.route) {
+        state.prStep = Object.assign({}, state.prStep, { userRoute: route || [] });
+        state.ui.view.show(state.prStep, { animate: false });
+      }
+    },
+  });
+
+  el.btnPractice.addEventListener('click', () => {
+    if (state.practice) exitPractice(false);
+    else enterPractice(PR.typesFor(state.encId)[0]);
+  });
 
   // ---------- Pintado ----------
 
@@ -104,7 +204,8 @@
       num.className = 'stage-num';
       num.textContent = k;
       b.append(num, document.createTextNode(` ${t(`stage${k}`)}`));
-      b.addEventListener('click', () => { stop(); goTo(state.result.steps.findIndex((st) => st.stage === k), true); });
+      b.disabled = !!state.practice;
+      b.addEventListener('click', () => { if (state.practice) return; stop(); goTo(state.result.steps.findIndex((st) => st.stage === k), true); });
       li.append(b);
       return li;
     }));
@@ -172,10 +273,15 @@
     state.ui.view.show(s, { animate, duration: 320 / state.speed });
     renderStageStrip();
     renderFormula();
-    el.narration.textContent = tEnc(s.text.key, s.text.params);
-    renderPlayer();
-    el.editHint.hidden = s.stage < 3;
-    el.editHint.textContent = t(state.ui.editHintKey || 'editHint');
+    if (state.practice) {
+      el.editHint.hidden = false;
+      el.editHint.textContent = t('practiceHint');
+    } else {
+      el.narration.textContent = tEnc(s.text.key, s.text.params);
+      renderPlayer();
+      el.editHint.hidden = s.stage < 3;
+      el.editHint.textContent = t(state.ui.editHintKey || 'editHint');
+    }
     learn.setStep(s);
     writeHash();
   }
@@ -245,12 +351,19 @@
     $('sisterCrossover').href = G.about.sisterUrl(state.lang, 'crossover');
     $('sisterMutation').href = G.about.sisterUrl(state.lang, 'mutation');
     el.speedOut.textContent = `${fmt(state.speed)}×`;
-    if (state.view === 'about') {
+    el.btnPractice.textContent = t(state.practice ? 'exitPractice' : 'practiceMode');
+    $('moodleLink').href = `#page=moodle&lang=${state.lang}`;
+    if (state.view === 'moodle') {
+      moodlePage.render(el.moodleBody, state.lang);
+    } else if (state.view === 'cmp') {
+      cmpPage.render();
+    } else if (state.view === 'about') {
       document.title = `${G.about.text[state.lang].title} · ${t('brand')}`;
       G.about.renderAbout(el.aboutBody, state.lang);
     } else if (state.view === 'enc') {
       renderEncHeader();
       state.ui.onLanguage();
+      if (state.practice) panel.refresh();
       learn.refresh();
       renderLegend();
       renderAll(false);
@@ -267,6 +380,8 @@
     el.homeView.hidden = which !== 'home';
     el.encView.hidden = which !== 'enc';
     el.aboutView.hidden = which !== 'about';
+    el.cmpView.hidden = which !== 'cmp';
+    el.moodleView.hidden = which !== 'moodle';
   }
 
   function show(which) {
@@ -283,13 +398,19 @@
     if (same) return;
     state.encId = id;
     state.result = null;
+    const pr = q.get('practice');
+    state.practice = PR.typesFor(id).indexOf(pr) !== -1 ? pr : null;
+    state.ex = null;
+    state.prStep = null;
+    setPracticeView(!!state.practice);
     state.ui = G.encodingUI[id]({
       P: G.problems[id], content: content(), t, fmt, R,
       lang: () => state.lang,
       controlsEl: el.encControls, extraEl: el.encExtra, svg: el.viz,
       onChange: (mode) => recompute(mode),
       stop,
-      currentStep: curStep,
+      currentStep: baseStep,
+      onCity: (c) => { if (state.practice) panel.addCity(c); },
     });
     if (!learn) learn = createLearnPanel({ content: content(), t, lang: () => state.lang });
     learn.setContent(content(), state.ui.variant());
@@ -303,8 +424,13 @@
     const q = new URLSearchParams(location.hash.replace(/^#/, ''));
     if (i18n.languages.indexOf(q.get('lang')) !== -1) state.lang = q.get('lang');
     const id = q.get('enc');
-    if (id && registry.isReady(id) && G.problems && G.problems[id] && G.content[id] && G.encodingUI && G.encodingUI[id]) showEnc(id, q);
+    const cmp = q.get('cmp');
+    if (cmp && G.compare.PROBLEMS[cmp]) {
+      show('cmp');
+      cmpPage.show(q);
+    } else if (id && registry.isReady(id) && G.problems && G.problems[id] && G.content[id] && G.encodingUI && G.encodingUI[id]) showEnc(id, q);
     else if (q.get('page') === 'about') show('about');
+    else if (q.get('page') === 'moodle') show('moodle');
     else show('home');
     applyLanguage();
   }
@@ -313,12 +439,15 @@
   function writeHash() {
     const params = new URLSearchParams();
     if (state.view === 'about') params.set('page', 'about');
+    if (state.view === 'moodle') params.set('page', 'moodle');
+    if (state.view === 'cmp') cmpPage.hash().forEach(([k, v]) => params.set(k, v));
     if (state.view === 'enc' && state.result) {
       params.set('enc', state.encId);
       params.set('lang', state.lang);
       state.ui.hash().forEach(([k, v]) => params.set(k, v));
       params.set('step', String(state.step));
-    } else params.set('lang', state.lang);
+      if (state.practice) params.set('practice', state.practice);
+    } else if (state.view !== 'cmp') params.set('lang', state.lang);
     const h = params.toString();
     if (location.hash.replace(/^#/, '') === h) return;
     try { history.replaceState(null, '', `#${h}`); } catch (err) { /* file:// en algunos navegadores */ }
@@ -330,13 +459,13 @@
   }));
 
   // Enlaces a la pantalla inicial conservando el idioma
-  [$('brandLink'), $('backLink'), $('aboutBack')].forEach((a) => a.addEventListener('click', (e) => {
+  [$('brandLink'), $('backLink'), $('aboutBack'), $('moodleBack')].forEach((a) => a.addEventListener('click', (e) => {
     e.preventDefault();
     location.hash = `lang=${state.lang}`;
   }));
 
   document.addEventListener('keydown', (e) => {
-    if (state.view !== 'enc') return;
+    if (state.view !== 'enc' || state.practice) return;
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
     if (e.altKey || e.ctrlKey || e.metaKey) return;
@@ -347,6 +476,9 @@
   });
 
   window.addEventListener('hashchange', route);
+
+  // Solo lectura, para comprobar la página desde fuera (pruebas en el navegador)
+  G.app = { exercise: () => state.ex, step: () => curStep(), practice: () => state.practice };
 
   // ---------- Arranque ----------
   route();

@@ -100,10 +100,10 @@
     // ---------- Etiquetas de fila ----------
     function rowLabels(g) {
       const rows = [
-        { key: 'rowChromosome', y: g.top + (isReal ? 34 : 18 + g.cell / 2), hide: step.stage < 3 },
+        { key: 'rowChromosome', y: g.top + (isReal ? 34 : 18 + g.cell / 2), hide: step.stage < 3 || step.hideGenes },
         { key: 'rowLandscape', y: g.mapTop + 12 },
       ];
-      if (!isReal && step.code === 'gray') rows.splice(1, 0, { key: 'rowBinary', y: g.top + 18 + g.cell + 16 + g.cell / 2, hide: step.stage < 4 });
+      if (!isReal && step.code === 'gray') rows.splice(1, 0, { key: 'rowBinary', y: g.top + 18 + g.cell + 16 + g.cell / 2, hide: step.stage < 4 || step.hideGenes });
       gLabels.selectAll('text').data(rows, (d) => d.key).join('text').attr('class', 'row-label')
         .attr('x', LEFT - 16).attr('y', (d) => d.y).attr('dy', '0.35em').attr('text-anchor', 'end')
         .attr('opacity', (d) => (d.hide ? 0 : 1)).text((d) => t(d.key));
@@ -111,11 +111,11 @@
 
     // ---------- Cromosoma ----------
     function keyHandler(ev, d) {
-      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); ev.stopPropagation(); if (opts.onBit) opts.onBit(d.j); }
+      if ((ev.key === 'Enter' || ev.key === ' ') && !step.practice) { ev.preventDefault(); ev.stopPropagation(); if (opts.onBit) opts.onBit(d.j); }
     }
 
     function drawRealGenes(g, dur) {
-      const visible = step.stage >= 3;
+      const visible = step.stage >= 3 && !step.hideGenes;
       const W = 150;
       const H = 48;
       const x0 = LEFT + 36;
@@ -151,7 +151,8 @@
     }
 
     function drawBits(g, dur) {
-      const visible = step.stage >= 3;
+      const visible = step.stage >= 3 && !step.hideGenes;
+      const live = visible && !step.practice;   // practicando, el cromosoma no se edita
       const cliffBits = [];
       if (step.cliff) {
         const i = step.cliff.i;
@@ -163,7 +164,7 @@
         const e = enter.append('g').attr('role', 'button');
         e.append('rect').attr('class', 'gene-rect').attr('rx', 5);
         e.append('text').attr('class', 'gene-num');
-        e.on('click', (ev, d) => { if (opts.onBit) opts.onBit(d.j); });
+        e.on('click', (ev, d) => { if (opts.onBit && !step.practice) opts.onBit(d.j); });
         e.on('keydown', keyHandler);
         return e;
       });
@@ -174,10 +175,11 @@
         if (dimmed(d.j)) c.push('dim');
         return c.join(' ');
       })
-        .attr('tabindex', visible ? 0 : -1)
+        .attr('tabindex', live ? 0 : -1)
+        .attr('role', live ? 'button' : null)
         .attr('aria-hidden', visible ? null : 'true')
-        .attr('aria-label', (d) => t('bitGeneAria', { pos: d.j + 1, b: d.v, i: d.j < k ? '₁' : '₂' }))
-        .style('pointer-events', visible ? null : 'none');
+        .attr('aria-label', (d) => t(live ? 'bitGeneAria' : 'bitGeneAriaStatic', { pos: d.j + 1, b: d.v, i: d.j < k ? '₁' : '₂' }))
+        .style('pointer-events', live ? null : 'none');
       sel.transition().duration(dur).attr('opacity', visible ? 1 : 0);
       const y0 = g.top + 18;
       sel.select('.gene-rect').attr('x', (d) => bitX(g, d.j)).attr('y', y0).attr('width', g.cell).attr('height', g.cell);
@@ -198,7 +200,7 @@
       // Fila del binario (Gray)
       const binY = y0 + g.cell + 16;
       const bins = [];
-      if (step.code === 'gray' && step.stage >= 4) {
+      if (step.code === 'gray' && step.stage >= 4 && visible) {
         [0, 1].forEach((i) => { if (step.bin[i]) step.bin[i].forEach((b, j) => bins.push({ id: `n${i}-${j}`, j: i * k + j, v: b })); });
       }
       const bsel = gChrom.selectAll('g.gene.binbit').data(bins, (d) => d.id).join((enter) => {
@@ -215,7 +217,7 @@
       const notes = [];
       const noteY = (step.code === 'gray' ? binY + g.cell : y0 + g.cell) + 22;
       [0, 1].forEach((i) => {
-        if (step.z[i] == null) return;
+        if (step.z[i] == null || !visible) return;
         const xi = i < step.revealed ? Fn.scale(fnId, step.z[i], k) : null;
         notes.push({ id: `z${i}`, x: bitX(g, i * k), text: t(xi == null ? 'decodedZ' : 'decodedZX', { i: SUBS[i], z: step.z[i], x: xi == null ? '' : fx(xi) }) });
       });
@@ -346,7 +348,7 @@
           e.on('keydown', (ev) => {
             const dlt = ev.shiftKey ? 1 : 0.1;
             const mv = { ArrowLeft: [-dlt, 0], ArrowRight: [dlt, 0], ArrowUp: [0, dlt], ArrowDown: [0, -dlt] }[ev.key];
-            if (!mv) return;
+            if (!mv || step.practice) return;
             ev.preventDefault();
             ev.stopPropagation();
             opts.onNudge(mv[0], mv[1]);
@@ -364,7 +366,7 @@
       const lines = [];
       const p = decodedPoint();
       const done = step.stage >= 5 || step.type === 'decodeDone' || (isReal && step.stage >= 3);
-      if (p && done) {
+      if (p && done && !step.practice) {
         lines.push({ cls: 'fp-main', text: t('panelPoint', { x1: fx(p[0]), x2: fx(p[1]) }) });
         lines.push({ cls: 'fp-main', text: t('panelF', { v: ff(Fn.evalAt(fnId, p)) }) });
       }
@@ -373,8 +375,8 @@
         lines.push({ cls: '', text: t('panelDelta', { k, v: fx(Fn.delta(fnId, k)) }) });
         if (step.stage >= 5 && opts.best) lines.push({ cls: 'fp-best', text: t('panelBest', { v: ff(opts.best().f) }) });
       }
-      if (isReal && step.treated) lines.push({ cls: '', text: t('panelEval', { x1: fx(step.treated.point[0]), x2: fx(step.treated.point[1]) }) });
-      if (step.result) lines.push({ cls: 'fp-fit', text: t('sumFitnessMin', { fitness: ff(step.result.fitness) }) });
+      if (isReal && step.treated && !step.practice) lines.push({ cls: '', text: t('panelEval', { x1: fx(step.treated.point[0]), x2: fx(step.treated.point[1]) }) });
+      if (step.result && !step.practice) lines.push({ cls: 'fp-fit', text: t('sumFitnessMin', { fitness: ff(step.result.fitness) }) });
       gPanel.selectAll('text.fp').data(lines).join('text').attr('class', (d) => `fp summary ${d.cls}`)
         .attr('x', x).attr('y', (d, i) => g.mapTop + 18 + i * 30).text((d) => d.text);
       // Escala de colores
@@ -400,10 +402,11 @@
       const [mx, my] = d3.pointer(ev, opts.svg);
       return [clampView(g, g.sx.invert(mx)), clampView(g, g.sy.invert(my))];
     }
-    hit.on('click', (ev) => { if (step && step.stage >= 3) opts.onMap(mapPoint(ev), 'click'); });
+    const editable = () => step && step.stage >= 3 && !step.practice;
+    hit.on('click', (ev) => { if (editable()) opts.onMap(mapPoint(ev), 'click'); });
     if (isReal) {
       const drag = d3.drag()
-        .filter((ev) => step && step.stage >= 3 && !ev.button)
+        .filter((ev) => editable() && !ev.button)
         .on('start drag', (ev) => opts.onMap(mapPoint(ev.sourceEvent), 'drag'))
         .on('end', () => { if (opts.onDragEnd) opts.onDragEnd(); });
       gPoint.call(drag);
@@ -424,7 +427,9 @@
       drawMarks(g);
       drawPoint(g);
       drawPanel(g);
-      hit.classed('active', step.stage >= 3).style('cursor', step.stage >= 3 ? (isReal ? 'crosshair' : 'pointer') : null);
+      hit.classed('active', editable()).style('cursor', editable() ? (isReal ? 'crosshair' : 'pointer') : null);
+      gPoint.selectAll('g.fpoint').attr('tabindex', isReal && !step.practice ? 0 : null).attr('role', isReal && !step.practice ? 'button' : null)
+        .classed('draggable', isReal && !step.practice);
     }
 
     return { setProblem, show, refreshLabels: () => { contourKey = null; if (step) show(step); } };

@@ -86,6 +86,7 @@
     // ---------- Vista ----------
     const view = root.GAX.createTspView({
       svg: ctx.svg, t, fmt,
+      onCity: (c) => { if (ctx.onCity) ctx.onCity(c); },
       optimumLength: () => s.opt.length,
       onSwap(a, b) {
         s.x = s.x.slice();
@@ -117,6 +118,16 @@
           ['sw-line sw-tour-opt', 'legendOptimal'], ['sw-line sw-tour-repeat', 'legendRepeat'], ['sw-city-missing', 'legendMissing']];
       },
       variant: () => 'path',
+      getPage: () => ({ inst: s.inst, x: s.x.slice(), seed: s.seed }),
+      setPage(p) {
+        if (p.inst !== s.inst) { s.inst = p.inst; s.opt = P.optimum(s.inst); }
+        s.x = p.x.slice();
+        s.n = s.x.length;
+        if (p.seed != null) s.seed = p.seed;
+        view.clearPick();
+        manual.clearError();
+        sync();
+      },
       editHintKey: 'editHintPerm',
       formulaInstance: (res) => t('formulaInstanceTsp', { n: s.n, fact: res.stats.permutations, tours: res.stats.tours, opt: fmt(Math.round(res.stats.optimum * 10) / 10) }),
       onLanguage() { manual.refresh(); sync(); },

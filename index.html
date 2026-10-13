@@ -28,6 +28,7 @@
         <p class="lead" data-i18n="homeLead"></p>
       </section>
       <div id="repGrid" class="rep-grid"></div>
+      <p class="home-extra"><a href="#page=moodle" id="moodleLink"><span data-i18n="moodleHomeLink">Para profesorado: bancos de preguntas para Moodle</span> <span aria-hidden="true">→</span></a></p>
       <p class="home-extra home-sister" id="seriesLinks">
         <span data-i18n="seriesHomeLink">Después de representar: selección, cruce y mutación, las otras herramientas de la serie</span>
         <span class="series-links">
@@ -52,7 +53,10 @@
       </section>
 
       <section class="card stage">
-        <ol class="stage-strip" id="stageStrip" data-i18n-aria="stagesLabel" aria-label="Etapas"></ol>
+        <div class="stage-top">
+          <ol class="stage-strip" id="stageStrip" data-i18n-aria="stagesLabel" aria-label="Etapas"></ol>
+          <button type="button" id="btnPractice" class="btn practice-btn" aria-pressed="false">Practicar</button>
+        </div>
         <div class="formula" id="formulaCard">
           <div class="formula-rows" id="formulaRows"></div>
           <p class="hint formula-instance" id="formulaInstance"></p>
@@ -96,6 +100,8 @@
         <ul class="legend" id="legend"></ul>
       </section>
 
+      <section class="card practice" id="practiceCard" hidden aria-labelledby="practice-title"></section>
+
       <div id="encExtra" class="enc-extra"></div>
 
       <section class="card learn" aria-labelledby="learn-title">
@@ -138,6 +144,13 @@
       </footer>
     </main>
 
+    <main id="cmpView" hidden></main>
+
+    <main id="moodleView" hidden>
+      <a class="back" href="#" id="moodleBack"><span aria-hidden="true">←</span> <span data-i18n="allEncodings">Todas las representaciones</span></a>
+      <article class="card about moodle" id="moodleBody"></article>
+    </main>
+
     <main id="aboutView" hidden>
       <a class="back" href="#" id="aboutBack"><span aria-hidden="true">←</span> <span data-i18n="allEncodings">Todas las representaciones</span></a>
       <article class="card about" id="aboutBody"></article>
@@ -159,6 +172,7 @@
   <script src="js/problems/assignment-matrix.js"></script>
   <script src="js/problems/function-real.js"></script>
   <script src="js/problems/function-bits.js"></script>
+  <script src="js/practice.js"></script>
   <script src="js/content/knapsack-bits.js"></script>
   <script src="js/content/tsp-perm.js"></script>
   <script src="js/content/assignment-int.js"></script>
@@ -178,6 +192,11 @@
   <script src="js/ui/function.js"></script>
   <script src="js/ui/function-real.js"></script>
   <script src="js/ui/function-bits.js"></script>
+  <script src="js/practice-ui.js"></script>
+  <script src="js/compare.js"></script>
+  <script src="js/compare-view.js"></script>
+  <script src="js/moodle.js"></script>
+  <script src="js/moodle-page.js"></script>
   <script src="js/learn.js"></script>
   <script src="js/about.js"></script>
   <script src="js/home.js"></script>

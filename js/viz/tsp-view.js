@@ -50,7 +50,7 @@
 
     function rowLabels() {
       const rows = [
-        { key: 'rowChromosome', y: Y.genes + 25, hide: step.stage < 3 },
+        { key: 'rowChromosome', y: Y.genes + 25, hide: step.stage < 3 || step.hideGenes },
         { key: 'rowMap', y: Y.map + 18 },
       ];
       gLabels.selectAll('text').data(rows).join('text').attr('class', 'row-label')
@@ -60,7 +60,8 @@
 
     function drawGenes(dur) {
       const g = geom();
-      const visible = step.stage >= 3;
+      const visible = step.stage >= 3 && !step.hideGenes;
+      const live = visible && !step.practice;   // practicando, el cromosoma no se edita
       const seen = new Map();
       const data = step.genes.map((c, i) => {
         const rep = seen.has(c);
@@ -87,11 +88,12 @@
         if (step.stage === 4 && d.i >= step.revealed && step.type !== 'decodeIntro') c.push('dim');
         return c.join(' ');
       })
-        .attr('tabindex', visible ? 0 : -1)
+        .attr('tabindex', live ? 0 : -1)
+        .attr('role', live ? 'button' : null)
         .attr('aria-hidden', visible ? null : 'true')
-        .attr('aria-pressed', (d) => (picked === d.i ? 'true' : 'false'))
-        .attr('aria-label', (d) => t('permGeneAria', { pos: d.i + 1, city: d.c }))
-        .style('pointer-events', visible ? null : 'none');
+        .attr('aria-pressed', (d) => (live ? (picked === d.i ? 'true' : 'false') : null))
+        .attr('aria-label', (d) => t(live ? 'permGeneAria' : 'permGeneAriaStatic', { pos: d.i + 1, city: d.c }))
+        .style('pointer-events', live ? null : 'none');
       sel.transition().duration(dur).attr('opacity', visible ? 1 : 0);
       sel.select('.gene-pos').attr('x', (d) => g.x(d.i)).attr('y', Y.pos).attr('text-anchor', 'middle').text((d) => d.i + 1);
       sel.select('.gene-rect').attr('x', (d) => g.x(d.i) - g.gene / 2).attr('y', Y.genes).attr('width', g.gene).attr('height', g.gene);
@@ -100,6 +102,7 @@
     }
 
     function pick(i) {
+      if (step.practice) return;
       if (picked === null) { picked = i; show(step); return; }
       const a = picked;
       picked = null;
@@ -125,7 +128,7 @@
         seen.add(genes[i]);
       }
       if (step.closed && step.stage >= 4) edges.push({ id: 'close', a: genes[n - 1], b: genes[0], kind: 'close', focus: step.type === 'decodeClose' });
-      gEdges.selectAll('line').data(edges, (d) => `${d.id}:${d.a}-${d.b}`).join(
+      gEdges.selectAll('line.route-edge').data(edges, (d) => `${d.id}:${d.a}-${d.b}`).join(
         (enter) => enter.append('line')
           .attr('x1', (d) => MX(at(d.a))).attr('y1', (d) => MY(at(d.a)))
           .attr('x2', (d) => MX(at(d.a))).attr('y2', (d) => MY(at(d.a)))
@@ -141,8 +144,18 @@
         const e = enter.append('g').attr('class', 'city');
         e.append('circle').attr('r', 13);
         e.append('text').attr('dy', '0.35em');
+        e.on('click', (ev, c) => { if (step.pickCities && opts.onCity) opts.onCity(c); });
+        e.on('keydown', (ev, c) => {
+          if ((ev.key === 'Enter' || ev.key === ' ') && step.pickCities && opts.onCity) { ev.preventDefault(); ev.stopPropagation(); opts.onCity(c); }
+        });
         return e;
       });
+      const pickable = !!step.pickCities;
+      const route = step.userRoute || [];
+      sel.attr('tabindex', pickable ? 0 : null).attr('role', pickable ? 'button' : null)
+        .attr('aria-label', (c) => (pickable ? t('cityPickAria', { city: c }) : null))
+        .classed('pickable', pickable)
+        .classed('user-visited', (c) => route.indexOf(c) !== -1);
       sel.attr('transform', (c) => `translate(${MX(at(c))},${MY(at(c))})`)
         .attr('class', (c) => {
           const cls = ['city', 'big'];
@@ -153,11 +166,22 @@
           return cls.join(' ');
         });
       sel.select('text').text((c) => c);
+      // Circuito que marca el estudiante al practicar (ciudad a ciudad; se cierra al completarlo)
+      const user = [];
+      for (let i = 1; i < route.length; i++) user.push({ id: `u${i}`, a: route[i - 1], b: route[i] });
+      if (route.length === n && n > 1) user.push({ id: 'uclose', a: route[n - 1], b: route[0], close: true });
+      gEdges.selectAll('line.user-edge').data(user, (d) => `${d.id}:${d.a}-${d.b}`).join('line')
+        .attr('class', (d) => `user-edge${d.close ? ' close' : ''}`)
+        .attr('x1', (d) => MX(at(d.a))).attr('y1', (d) => MY(at(d.a))).attr('x2', (d) => MX(at(d.b))).attr('y2', (d) => MY(at(d.b)));
     }
 
     function drawSummary() {
       const x0 = LEFT + MAP + 36;
       const lines = [];
+      if (step.practice) {
+        gSummary.selectAll('text').remove();
+        return;
+      }
       if (step.stage >= 4) lines.push({ cls: 'sum-main', text: t('tourSoFar', { len: fmt(Math.round(step.length * 10) / 10) }) });
       if (step.stage >= 2 && step.showOpt) lines.push({ cls: 'sum-opt', text: t('tourOptimal', { len: fmt(Math.round(opts.optimumLength() * 10) / 10) }) });
       if (step.result) lines.push({ cls: 'sum-fit', text: t('tourFitness', { len: fmt(Math.round(step.result.fitness * 10) / 10) }) });

@@ -38,17 +38,17 @@ It opens the series formed by [Selection](https://github.com/josemagalan/selecti
 
 ## Status
 
-In development. Available: the 0/1 knapsack with binary encoding (step by step through the five stages, the five ways of handling infeasibility side by side), the travelling salesman problem with path representation (exact optimum, invalid chromosomes and their repair, and the 2n equivalent chromosomes of each tour) task-to-machine assignment with two encodings, an integer vector and a binary matrix (exact optimum, Gantt chart, repair and penalty for the matrix, and the same assignment written in both encodings) and continuous-function optimisation with a real vector and with a standard or Gray bit string (contour map, draggable point, clamp, reflect and penalty for points outside the box, grid of representable points and best representable point, Hamming neighbours and cliffs, and the same point written in the three encodings), all with the Learn more panel. Practice mode, the full comparison of encodings and the Moodle question banks will follow.
+In development. Available: the 0/1 knapsack with binary encoding (step by step through the five stages, the five ways of handling infeasibility side by side), the travelling salesman problem with path representation (exact optimum, invalid chromosomes and their repair, and the 2n equivalent chromosomes of each tour) task-to-machine assignment with two encodings, an integer vector and a binary matrix (exact optimum, Gantt chart, repair and penalty for the matrix, and the same assignment written in both encodings) and continuous-function optimisation with a real vector and with a standard or Gray bit string (contour map, draggable point, clamp, reflect and penalty for points outside the box, grid of representable points and best representable point, Hamming neighbours and cliffs, and the same point written in the three encodings), all with the Learn more panel and practice mode (21 exercises: encode, decode, validity or locality, and fitness, depending on the encoding). Compare encodings is available for the two problems with several encodings (assignment and function). Question banks for Moodle are available for teachers (the 21 practice exercises, in three levels).
 
 ## Features
 
-Planned, following the sister tools:
+Following the sister tools:
 
 - **Step by step** through five stages — problem, formalisation, encoding, exploration and validity — with narration in Spanish and English and gene-by-gene decoding.
 - **Learn more panel:** the full mathematical formalisation, pseudocode for decoding and evaluation, Python and JavaScript implementations to copy or download (tested to give exactly the same results as the tool), and references, with the course’s core textbooks (Talbi, 2009; Bautista-Valhondo, 2020) always first after the original source.
-- **Practice mode:** decode a chromosome, encode a solution, decide whether it is feasible and compute its fitness.
-- **Compare encodings** of the same problem: size of the search space, share of feasible chromosomes, redundancy and locality.
-- **Question banks for Moodle (for teachers)** in Moodle XML, in three difficulty levels, with the solution linked to each exercise in the tool.
+- **Practice mode** (available): encode a solution, decode a chromosome, decide whether it is valid and apply the treatment (in the binary function, find a grid neighbour instead), and compute its fitness, with element-by-element marking and a link to the step-by-step solution.
+- **Compare encodings** (available for assignment and function): the same solution in each encoding, size of the search space, share of feasible chromosomes, redundancy, and locality measured over all one-gene neighbours, for the example and on average over random solutions.
+- **Question banks for Moodle (for teachers)** (available): the 21 practice exercises as cloze questions in Moodle XML, in three difficulty levels, with partial credit per element and, in the feedback, links to the step-by-step solution and to the same exercise in the tool.
 
 ## Pedagogical purpose
 

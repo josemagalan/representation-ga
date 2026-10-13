@@ -71,7 +71,7 @@
     function rowLabels(g) {
       const rows = [
         { key: 'rowTimes', y: g.tableTop + CELL / 2 },
-        { key: 'rowChromosome', y: g.chromTop + (mode === 'int' ? 22 : CELL / 2), hide: step.stage < 3 },
+        { key: 'rowChromosome', y: g.chromTop + (mode === 'int' ? 22 : CELL / 2), hide: step.stage < 3 || step.hideGenes },
         { key: 'rowPlan', y: g.ganttTop + LANE / 2 },
       ];
       gLabels.selectAll('text').data(rows).join('text').attr('class', 'row-label')
@@ -92,7 +92,7 @@
       const heads = d3.range(g.n).map((i) => {
         const k = showPick ? machinesOf(i).length : 1;
         const seen = step.stage >= 3 && (step.stage === 3 || i < step.revealed || ended);
-        return { i, bad: mode === 'matrix' && seen && k !== 1, focus: step.focus.indexOf(i) !== -1 };
+        return { i, bad: mode === 'matrix' && seen && k !== 1 && !step.practice, focus: step.focus.indexOf(i) !== -1 };
       });
       gTable.selectAll('text.task-head').data(heads).join('text')
         .attr('class', (d) => `task-head${d.bad ? ' bad' : ''}${d.focus ? ' focus' : ''}`)
@@ -125,10 +125,14 @@
     function keyHandler(ev, d) {
       if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); ev.stopPropagation(); click(d); }
     }
-    function click(d) { if (mode === 'int') onGene(d.i); else onGene(d.i, d.j); }
+    function click(d) {
+      if (step.practice) return;   // practicando, el cromosoma no se edita
+      if (mode === 'int') onGene(d.i); else onGene(d.i, d.j);
+    }
 
     function drawChromosome(g, dur) {
-      const visible = step.stage >= 3;
+      const visible = step.stage >= 3 && !step.hideGenes;
+      const live = visible && !step.practice;
       const dimmed = (i) => step.stage === 4 && i >= step.revealed && step.type !== 'decodeIntro';
       let data;
       if (mode === 'int') {
@@ -153,10 +157,11 @@
         if (dimmed(d.i)) c.push('dim');
         return c.join(' ');
       })
-        .attr('tabindex', visible ? 0 : -1)
+        .attr('tabindex', live ? 0 : -1)
+        .attr('role', live ? 'button' : null)
         .attr('aria-hidden', visible ? null : 'true')
-        .attr('aria-label', (d) => (mode === 'int' ? t('intGeneAria', { i: d.i + 1, j: d.j }) : t('bitAria', { i: d.i + 1, j: d.j, b: d.v })))
-        .style('pointer-events', visible ? null : 'none');
+        .attr('aria-label', (d) => (mode === 'int' ? t(live ? 'intGeneAria' : 'intGeneAriaStatic', { i: d.i + 1, j: d.j }) : t(live ? 'bitAria' : 'bitAriaStatic', { i: d.i + 1, j: d.j, b: d.v })))
+        .style('pointer-events', live ? null : 'none');
       sel.transition().duration(dur).attr('opacity', visible ? 1 : 0);
       const y = (d) => (mode === 'int' ? g.chromTop : g.chromTop + (d.j - 1) * CELL + 2);
       sel.select('.gene-rect').attr('x', (d) => g.cx(d.i) - size / 2).attr('y', y).attr('width', size).attr('height', size);
@@ -165,7 +170,7 @@
       if (mode === 'matrix') machineLabels(gChrom, g, g.chromTop, CELL, visible);
       // Columnas infactibles de la matriz: recuadro discontinuo
       const bad = [];
-      if (mode === 'matrix' && visible) {
+      if (mode === 'matrix' && visible && !step.practice) {
         step.genes.forEach((row, i) => {
           const k = row.reduce((a, b) => a + b, 0);
           if (k !== 1 && (step.stage !== 4 || i < step.revealed || step.type === 'decodeIntro')) bad.push(i);
@@ -208,8 +213,8 @@
       const done = step.stage >= 5 || step.type === 'decodeDone';
       const cmax = Math.max(0, ...step.loads);
       const marks = [];
-      if (done && step.stage >= 4) marks.push({ id: 'cmax', v: cmax, label: t('ganttCmax', { v: fmt(cmax) }), y: g.ganttTop - 10 });
-      if (step.showOpt && opt != null) marks.push({ id: 'opt', v: opt, label: t('ganttOpt', { v: fmt(opt) }), y: g.ganttBottom + 18 });
+      if (step.practice) { /* practicando: ni el makespan ni el óptimo */ } else if (done && step.stage >= 4) marks.push({ id: 'cmax', v: cmax, label: t('ganttCmax', { v: fmt(cmax) }), y: g.ganttTop - 10 });
+      if (step.showOpt && opt != null && !step.practice) marks.push({ id: 'opt', v: opt, label: t('ganttOpt', { v: fmt(opt) }), y: g.ganttBottom + 18 });
       const mk = gGantt.selectAll('g.mark').data(marks, (d) => d.id).join((enter) => {
         const e = enter.append('g');
         e.append('line');
@@ -223,7 +228,7 @@
 
     function drawSummary(g) {
       const parts = [];
-      if (step.stage >= 4) {
+      if (step.stage >= 4 && !step.practice) {
         parts.push({ cls: '', text: t('sumLoads', { loads: step.loads.join(' · ') }) });
         if (step.result) parts.push({ cls: 'sum-fit', text: t('sumFitnessMin', { fitness: fmt(step.result.fitness) }) });
       }

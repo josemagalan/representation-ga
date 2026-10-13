@@ -55,7 +55,7 @@
     function rowLabels() {
       const rows = [
         { key: 'rowItems', y: Y.items + Y.itemH / 2 },
-        { key: 'rowChromosome', y: Y.genes + 23, hide: !step || step.stage < 3 },
+        { key: 'rowChromosome', y: Y.genes + 23, hide: !step || step.stage < 3 || step.hideGenes },
         { key: 'rowKnapsack', y: Y.bag + Y.bagH / 2 },
       ];
       gLabels.selectAll('text').data(rows).join('text')
@@ -97,15 +97,16 @@
 
     function drawGenes(dur) {
       const g = geom();
-      const visible = step.stage >= 3;
+      const visible = step.stage >= 3 && !step.hideGenes;
+      const live = visible && !step.practice;   // practicando, el cromosoma no se edita
       const data = step.genes.map((b, i) => ({ i, b }));
       const sel = gGenes.selectAll('g.gene').data(data, (d) => d.i).join((enter) => {
         const e = enter.append('g').attr('class', 'gene').attr('role', 'button').attr('tabindex', 0);
         e.append('rect').attr('class', 'gene-rect').attr('rx', 8);
         e.append('text').attr('class', 'gene-num');
-        e.on('click', (ev, d) => onToggle(d.i));
+        e.on('click', (ev, d) => { if (!step.practice) onToggle(d.i); });
         e.on('keydown', (ev, d) => {
-          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); ev.stopPropagation(); onToggle(d.i); }
+          if ((ev.key === 'Enter' || ev.key === ' ') && !step.practice) { ev.preventDefault(); ev.stopPropagation(); onToggle(d.i); }
         });
         return e;
       });
@@ -116,10 +117,11 @@
         if (step.stage === 4 && d.i >= step.revealed && step.type !== 'decodeIntro') c.push('dim');
         return c.join(' ');
       })
-        .attr('tabindex', visible ? 0 : -1)
+        .attr('tabindex', live ? 0 : -1)
+        .attr('role', live ? 'button' : null)
         .attr('aria-hidden', visible ? null : 'true')
-        .attr('aria-label', (d) => t('geneAria', { pos: d.i + 1, b: d.b }))
-        .style('pointer-events', visible ? null : 'none');
+        .attr('aria-label', (d) => t(live ? 'geneAria' : 'geneAriaStatic', { pos: d.i + 1, b: d.b }))
+        .style('pointer-events', live ? null : 'none');
       sel.transition().duration(dur).attr('opacity', visible ? 1 : 0);
       sel.select('.gene-rect').attr('x', (d) => g.x(d.i) - g.gene / 2).attr('y', Y.genes).attr('width', g.gene).attr('height', g.gene);
       sel.select('.gene-num').attr('x', (d) => g.x(d.i)).attr('y', Y.genes + g.gene / 2).attr('dy', '0.36em')
@@ -165,7 +167,7 @@
     }
 
     function drawSummary() {
-      const showNumbers = step.stage >= 4;
+      const showNumbers = step.stage >= 4 && !step.practice;
       const parts = [];
       if (showNumbers) {
         parts.push({ cls: step.weight > inst.capacity ? 'sum-over' : 'sum-ok', text: t('sumWeight', { weight: step.weight, W: inst.capacity }) });
