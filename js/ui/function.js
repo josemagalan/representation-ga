@@ -267,7 +267,7 @@
         }
         const xs = q.get('x');
         let x = null;
-        if (xs) x = isReal ? xs.split('_').map(Number).map(Fn.round2) : xs.split('').map(Number);
+        if (xs) x = isReal ? xs.split('_').map((v) => (v.trim() === '' ? NaN : Fn.round2(Number(v)))) : xs.split('').map(Number);
         s.x = x && !P.validate(inst(), x) ? x : newChromosome(R.newSeed());
         sync();
       },
@@ -279,7 +279,7 @@
         const h = [['fn', s.fn], ['v', s.variant]];
         if (isReal) {
           if (s.variant === 'penalty') h.push(['l', String(s.lambda)]);
-          h.push(['x', realHash(s.x)]);
+          h.push(['k', String(s.k)], ['x', realHash(s.x)]);   // k no se usa aquí, pero lo usa la tarjeta de las tres codificaciones
         } else h.push(['k', String(s.k)], ['x', s.x.join('')]);
         return h;
       },

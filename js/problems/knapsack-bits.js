@@ -38,7 +38,7 @@
   const defaultCapacity = (weights) => Math.max(1, Math.floor(sum(weights) / 2));
 
   function randomInstance(seed, n) {
-    const r = R.mulberry32((seed >>> 0) || 1);
+    const r = R.mulberry32(R.seedState(seed));
     const weights = [];
     const values = [];
     for (let i = 0; i < n; i++) {
@@ -50,7 +50,7 @@
 
   /** Cromosoma aleatorio (cada bit, 0 o 1 con probabilidad 1/2), de un flujo distinto al de la instancia. */
   function randomChromosome(seed, n) {
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 2654435761) ^ 0x5bd1e995) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 2654435761) ^ 0x5bd1e995) >>> 0);
     return Array.from({ length: n }, () => (r() < 0.5 ? 0 : 1));
   }
 
@@ -130,7 +130,7 @@
   /** Fuente de números aleatorios: dados (opts.draws) o con semilla, redondeados a centésimas. */
   function drawSource(opts) {
     const given = Array.isArray(opts.draws) ? opts.draws : null;
-    const rand = R.mulberry32((opts.seed >>> 0) || 1);
+    const rand = R.mulberry32(R.seedState(opts.seed));
     const used = [];
     let k = 0;
     function next() {

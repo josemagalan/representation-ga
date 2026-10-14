@@ -131,7 +131,7 @@
         const lam = Number(q.get('l'));
         s.lambda = q.get('l') != null && lam >= P.LAMBDA.min && lam <= P.LAMBDA.max ? Math.round(lam * 10) / 10 : P.LAMBDA.def;
         s.draw = Math.max(1, Math.floor(Number(q.get('r')) || 1));
-        s.seed = Math.max(0, Math.floor(Number(q.get('s'))) || 0) || (R.newSeed() % 1000000);
+        s.seed = R.parseSeed(q.get('s')) ?? (R.newSeed() % 1000000);
         const inst = { weights: intList(q.get('w')), values: intList(q.get('val')), capacity: Number(q.get('W')) };
         const x = intList(q.get('x'));
         if (inst.weights && inst.values && x && !P.validate(inst, x)) { s.inst = inst; s.x = x; } else {

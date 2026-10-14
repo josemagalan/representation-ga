@@ -31,13 +31,13 @@
   }
 
   function randomChromosome(seed, n) {
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 2246822519) ^ 0x27d4eb2f) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 2246822519) ^ 0x27d4eb2f) >>> 0);
     return R.randomPermutation(r, n);
   }
 
   /** Cromosoma no válido de ejemplo: una permutación en la que una ciudad se copia sobre otra. */
   function brokenChromosome(seed, n) {
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 3266489917) ^ 0x165667b1) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 3266489917) ^ 0x165667b1) >>> 0);
     const x = R.randomPermutation(r, n);
     // La copia no va al lado del original, para que el tramo a la ciudad repetida se vea en el mapa
     const a = R.randInt(r, 0, n - 1);

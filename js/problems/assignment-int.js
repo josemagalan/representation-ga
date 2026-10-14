@@ -73,8 +73,11 @@
     const cmax = A.cmaxOf(L);
     const crit = A.critical(L);
     st.showOpt = true;
-    snap('decodeDone', 4, cmax === opt.makespan ? 'decodeDoneOpt' : 'decodeDone',
-      { loads: L.join(', '), cmax, crit: crit.join(', '), opt: opt.makespan, gap: pct1((cmax - opt.makespan) / opt.makespan) });
+    // Con empate, «máquinas 1 y 2» (critA y critB) en vez de «máquina 1, 2»
+    const tie = crit.length > 1 ? 'Tie' : '';
+    snap('decodeDone', 4, (cmax === opt.makespan ? 'decodeDoneOpt' : 'decodeDone') + tie,
+      { loads: L.join(', '), cmax, crit: crit.join(', '), critA: crit.slice(0, -1).join(', '), critB: crit[crit.length - 1],
+        opt: opt.makespan, gap: pct1((cmax - opt.makespan) / opt.makespan) });
     st.showOpt = false;
     // 5 · Validez
     const result = { fitness: cmax, assignment: a.slice(), loads: L.slice(), feasible: true };

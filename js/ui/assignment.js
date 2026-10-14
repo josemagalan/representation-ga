@@ -211,9 +211,9 @@
           const vr = q.get('v');
           s.variant = P.VARIANTS.indexOf(vr) !== -1 ? vr : 'repair';
           const lam = Number(q.get('l'));
-          s.lambda = q.get('l') != null && lam >= P.LAMBDA.min && lam <= P.LAMBDA.max ? Math.round(lam * 10) / 10 : P.LAMBDA.def;
+          s.lambda = q.get('l') != null && lam >= P.LAMBDA.min && lam <= P.LAMBDA.max ? Math.round(lam / P.LAMBDA.step) * P.LAMBDA.step : P.LAMBDA.def;   // al paso del deslizador
         }
-        const sd = Math.max(0, Math.floor(Number(q.get('s'))) || 0) || (R.newSeed() % 1000000);
+        const sd = R.parseSeed(q.get('s')) ?? (R.newSeed() % 1000000);
         const inst = parseP(q.get('p'));
         if (inst) {
           s.seed = sd;

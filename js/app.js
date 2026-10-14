@@ -392,10 +392,11 @@
     if (changed) window.scrollTo(0, 0);
   }
 
+  // Se rehace la página aunque la codificación sea la misma: el hash ha cambiado (enlace estándar ↔ Gray,
+  // URL editada a mano o enlace de Moodle pegado en la pestaña abierta) y hay que leer su estado.
   function showEnc(id, q) {
     const same = id === state.encId && state.view === 'enc' && state.result;
     show('enc');
-    if (same) return;
     state.encId = id;
     state.result = null;
     const pr = q.get('practice');
@@ -417,7 +418,7 @@
     state.ui.init(q);
     state.step = Math.max(0, Math.floor(Number(q.get('step')) || 0));
     recompute('keep');
-    window.scrollTo(0, 0);
+    if (!same) window.scrollTo(0, 0);   // en la misma codificación se conserva la posición (la tarjeta del enlace)
   }
 
   function route() {

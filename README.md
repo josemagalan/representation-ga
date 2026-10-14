@@ -74,6 +74,8 @@ npm test
 
 The tests check every encoding (worked examples and thousands of random cases contrasted with an independent implementation: decoding, feasibility, repair, penalty and exact optima), that the downloadable code gives the same results as the tool in both languages, that every animation step highlights pseudocode lines that exist, that every practice exercise has a unique answer and is marked correctly, the comparison metrics, and the Moodle generator (stored answers match what the question shows, one correct option, well-formed XML, links that reproduce each exercise). They run on every push with GitHub Actions.
 
+`node tests/browser/url-state.js` checks in a real browser that the state saved in the URL survives a reload and that links within the same encoding (standard ↔ Gray) work. It needs [Playwright](https://playwright.dev/), so it is not part of CI; without it, the script skips.
+
 ## Project structure
 
 | Path | Contents |

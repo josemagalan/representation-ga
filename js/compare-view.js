@@ -75,7 +75,7 @@
       s.from = C.problemOf(from) === s.problem ? from : null;
       s.v = q.get('v');
       if (s.problem === 'assignment') {
-        s.seed = Math.max(0, Math.floor(Number(q.get('s'))) || 0) || (R.newSeed() % 1000000);
+        s.seed = R.parseSeed(q.get('s')) ?? (R.newSeed() % 1000000);
         const inst = parseP(q.get('p'));
         const n = Number(q.get('n'));
         const m = Number(q.get('m'));
@@ -88,7 +88,7 @@
         s.fn = Fn.FN_IDS.indexOf(f) !== -1 ? f : 'himmelblau';
         const k = Number(q.get('k'));
         s.k = Number.isInteger(k) && k >= Fn.LIMITS.kMin && k <= Fn.LIMITS.kMax ? k : Fn.LIMITS.kDef;
-        const x = (q.get('x') || '').split('_').map(Number);
+        const x = (q.get('x') || '').split('_').map((v) => (v.trim() === '' ? NaN : Number(v)));   // «1_» no es (1, 0)
         s.p = x.length === 2 && x.every(Number.isFinite) ? C.comparePoint(s.fn, x) : Fn.randomPoint(s.fn, R.newSeed());
       }
     }

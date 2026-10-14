@@ -127,7 +127,7 @@
   }
 
   function assignmentMean(n, m, samples, seed) {
-    const r = R.mulberry32((seed >>> 0) || 1);
+    const r = R.mulberry32(R.seedState(seed));
     const accs = {};
     for (let s = 0; s < samples; s++) {
       const sd = 1 + Math.floor(r() * 4294967000);
@@ -227,7 +227,7 @@
   }
 
   function fnMean(fnId, k, samples, seed) {
-    const r = R.mulberry32((seed >>> 0) || 1);
+    const r = R.mulberry32(R.seedState(seed));
     const accs = {};
     for (let s = 0; s < samples; s++) {
       const p = Fn.randomPoint(fnId, 1 + Math.floor(r() * 4294967000));

@@ -7,7 +7,7 @@
  * significativo. Toda cadena decodifica a un punto de la caja, pero solo a uno de los 2ᵏ × 2ᵏ de la
  * rejilla, separados Δ = (b − a)/(2ᵏ − 1).
  * Variantes:
- *   standard   binario natural: z = Σ bⱼ 2ᵏ⁻¹⁻ʲ
+ *   standard   binaria estándar: z = Σ bⱼ 2ᵏ⁻¹⁻ʲ
  *   gray       código Gray reflejado: primero b₁ = g₁, bⱼ = bⱼ₋₁ ⊕ gⱼ; después, como el estándar
  *
  * run(instance, bits, opts) devuelve { steps, result, stats } con la traza de las cinco etapas.

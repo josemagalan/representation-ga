@@ -22,13 +22,13 @@
   // ---------- Instancias y cromosomas ----------
 
   function randomInstance(seed, n, m) {
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 2654435761) ^ 0x3c6ef372) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 2654435761) ^ 0x3c6ef372) >>> 0);
     return { p: Array.from({ length: n }, () => Array.from({ length: m }, () => R.randInt(r, 1, LIMITS.pMax))) };
   }
 
   /** Asignación aleatoria (cada tarea a una máquina al azar), de un flujo distinto al de la instancia. */
   function randomAssignment(seed, n, m) {
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 2246822519) ^ 0x1b873593) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 2246822519) ^ 0x1b873593) >>> 0);
     return Array.from({ length: n }, () => R.randInt(r, 1, m));
   }
 
@@ -74,7 +74,7 @@
   const isFeasibleMatrix = (y) => y.every((row) => rowOnes(row).length === 1);
   /** Vector de enteros de una matriz factible (null si alguna fila no tiene exactamente un 1). */
   const fromMatrix = (y) => (isFeasibleMatrix(y) ? y.map((row) => rowOnes(row)[0]) : null);
-  /** Infracciones: v = Σᵢ │Σⱼ yᵢⱼ − 1│. */
+  /** Infracciones: v = Σᵢ |Σⱼ yᵢⱼ − 1|. */
   const violations = (y) => y.reduce((s, row) => s + Math.abs(rowOnes(row).length - 1), 0);
 
   /** ¿Es la máquina j mejor que la k para la tarea i? Menor tiempo; a igualdad, menor índice. */

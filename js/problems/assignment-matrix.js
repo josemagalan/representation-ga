@@ -8,7 +8,7 @@
  * Tratamientos de la infactibilidad (variantes):
  *   repair    tarea a tarea: sin unos → la máquina más rápida para ella; con varios → se queda el
  *             de menor pᵢⱼ (empates: la máquina de menor índice)
- *   penalty   aptitud = Cmax de la matriz tal cual + λ · v,  v = Σᵢ │Σⱼ yᵢⱼ − 1│
+ *   penalty   aptitud = Cmax de la matriz tal cual + λ · v,  v = Σᵢ |Σⱼ yᵢⱼ − 1|
  *
  * run(instance, y, opts) devuelve { steps, result, stats } con la traza de las cinco etapas.
  * Funciona tanto en el navegador (window.GAX.problems['assignment-matrix']) como en Node.
@@ -24,7 +24,7 @@
 
   /** Matriz aleatoria: cada bit vale 1 con probabilidad 1/m, de modo que haya filas con cero, uno o varios unos. */
   function randomChromosome(seed, n, m) {
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 3266489917) ^ 0x85ebca6b) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 3266489917) ^ 0x85ebca6b) >>> 0);
     return Array.from({ length: n }, () => Array.from({ length: m }, () => (r() < 1 / m ? 1 : 0)));
   }
 

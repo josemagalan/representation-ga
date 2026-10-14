@@ -49,7 +49,25 @@
     return Math.floor(Math.random() * 1e6);
   }
 
-  const api = { mulberry32, randInt, shuffle, randomPermutation, randomCuts, newSeed };
+  /**
+   * Semilla leída de la URL: entero de 0 a max, o null si falta o no es válida (entonces se sortea otra).
+   * El 0 es una semilla como las demás.
+   */
+  function parseSeed(v, max = 999999) {
+    if (v == null || String(v).trim() === '') return null;
+    const n = Number(v);
+    return Number.isInteger(n) && n >= 0 && n <= max ? n : null;
+  }
+
+  /**
+   * Estado inicial de 32 bits para una semilla. El 0 se cambia por una constante que no es semilla de la
+   * herramienta (antes se cambiaba por 1 y las semillas 0 y 1 daban lo mismo); el resto queda igual.
+   */
+  function seedState(seed) {
+    return (seed >>> 0) || 0x9e3779b9;
+  }
+
+  const api = { mulberry32, randInt, shuffle, randomPermutation, randomCuts, newSeed, parseSeed, seedState };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else (root.GAX = root.GAX || {}).rng = api;
 })(typeof self !== 'undefined' ? self : this);

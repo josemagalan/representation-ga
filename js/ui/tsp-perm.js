@@ -101,7 +101,7 @@
     return {
       view,
       init(q) {
-        const sd = Math.max(0, Math.floor(Number(q.get('s'))) || 0) || (R.newSeed() % 1000000);
+        const sd = R.parseSeed(q.get('s')) ?? (R.newSeed() % 1000000);
         const n = Number(q.get('n'));
         generate(sd, n >= P.LIMITS.nMin && n <= P.LIMITS.nMax ? n : 7);
         const x = intList(q.get('x'));

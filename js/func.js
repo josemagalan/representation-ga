@@ -146,14 +146,14 @@
   /** Punto aleatorio dentro de la caja, en centésimas. */
   function randomPoint(id, seed) {
     const F = fnOf(id);
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 2654435761) ^ 0x2545f491) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 2654435761) ^ 0x2545f491) >>> 0);
     return [0, 1].map(() => Math.max(F.a, Math.min(F.b, round2(F.a + r() * (F.b - F.a)))));
   }
   /** Punto aleatorio con algún gen fuera de la caja, en la franja visible del mapa. */
   function randomOutside(id, seed) {
     const F = fnOf(id);
     const L = F.b - F.a;
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 2246822519) ^ 0x68e31da4) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 2246822519) ^ 0x68e31da4) >>> 0);
     const p = randomPoint(id, seed);
     const which = Math.floor(r() * 3);          // 0: x₁ fuera, 1: x₂ fuera, 2: los dos
     [0, 1].forEach((i) => {
@@ -165,7 +165,7 @@
   }
 
   function randomBits(seed, k) {
-    const r = R.mulberry32((Math.imul((seed >>> 0) || 1, 3266489917) ^ 0x1b873593) >>> 0);
+    const r = R.mulberry32((Math.imul(R.seedState(seed), 3266489917) ^ 0x1b873593) >>> 0);
     return Array.from({ length: 2 * k }, () => (r() < 0.5 ? 0 : 1));
   }
 

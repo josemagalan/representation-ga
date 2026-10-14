@@ -55,7 +55,7 @@
       formObj: 'Segundo, qué se quiere: minimizar la longitud del circuito, la suma de las distancias entre ciudades consecutivas más la vuelta de la última a la primera. Cada distancia es la euclídea redondeada a una décima.',
       formCons: 'Tercero, qué no se puede: repetir una ciudad o saltarse alguna. Aquí la restricción no es una desigualdad, sino la estructura de la variable: π tiene que ser una permutación de las ciudades.',
       formSpace: 'Hay {n}! = {fact} permutaciones, pero solo {tours} circuitos distintos: cada uno se puede empezar en cualquiera de sus {n} ciudades y recorrer en dos sentidos, así que lo describen 2n = {twoN} permutaciones. El más corto, en trazo discontinuo, mide {opt}.',
-      encode: 'Codificación de camino: el cromosoma es la propia permutación, {chrom}, y el gen k es la ciudad que se visita en el lugar k. Pulsa dos genes para intercambiarlos: el resultado sigue siendo una permutación.',
+      encode: 'Codificación de camino: el cromosoma es la propia permutación, {chrom}, y el gen k es la ciudad que se visita en el lugar k. Haz clic en dos genes para intercambiarlos: el resultado sigue siendo una permutación.',
       decodeIntro: 'Decodificar es pasar del cromosoma al circuito: recorremos los genes de izquierda a derecha y unimos cada ciudad con la siguiente.',
       decodeStart: 'Gen 1: el viajante sale de la ciudad {city}.',
       decodeGo: 'Gen {k}: de la ciudad {from} a la {to}, {d}. Llevamos {len}.',

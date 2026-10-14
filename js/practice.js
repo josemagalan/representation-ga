@@ -464,7 +464,7 @@
 
   /** Página nueva para «Nuevo ejercicio»: otra instancia del mismo tamaño y otro cromosoma. */
   function newPage(id, type, seed, page) {
-    const r = R.mulberry32((seed >>> 0) || 1);
+    const r = R.mulberry32(R.seedState(seed));
     const coin = () => r() < 0.5;
     if (id === 'knapsack-bits') {
       const P = problem(id);
