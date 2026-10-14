@@ -1,6 +1,6 @@
 # Representation in genetic algorithms
 
-Browse the series: [Genetic algorithms, step by step](https://josemagalan.github.io/genetic-algorithms-lab/?lang=en) — teaching tools for selection, crossover, mutation and evolutionary simulations.
+Browse the series: [Genetic algorithms, step by step](https://josemagalan.github.io/genetic-algorithms-lab/?lang=en) — five interactive modules, two simulators and a learning handbook.
 
 [![Live demo](https://img.shields.io/badge/Live_demo-GitHub_Pages-2ea44f?logo=github)](https://josemagalan.github.io/representation-ga/)
 [![Tests](https://github.com/josemagalan/representation-ga/actions/workflows/tests.yml/badge.svg)](https://github.com/josemagalan/representation-ga/actions/workflows/tests.yml)
@@ -11,9 +11,6 @@ Browse the series: [Genetic algorithms, step by step](https://josemagalan.github
 [![Purpose: Teaching tool](https://img.shields.io/badge/Purpose-Teaching_tool-informational.svg)](#pedagogical-purpose)
 [![Status: public beta](https://img.shields.io/badge/Status-public_beta-orange.svg)](#status)
 [![Accessibility: WCAG 2.2 AA checked with axe](https://img.shields.io/badge/Accessibility-WCAG_2.2_AA_(axe)-0b7285.svg)](#accessibility)
-[![Sister tool: selection-ga](https://img.shields.io/badge/Sister_tool-selection--ga-8a2be2?logo=github)](https://github.com/josemagalan/selection-ga)
-[![Sister tool: crossover-ga](https://img.shields.io/badge/Sister_tool-crossover--ga-8a2be2?logo=github)](https://github.com/josemagalan/crossover-ga)
-[![Sister tool: mutation-ga](https://img.shields.io/badge/Sister_tool-mutation--ga-8a2be2?logo=github)](https://github.com/josemagalan/mutation-ga)
 
 **José Manuel Galán**¹ · **Silvia Díaz-de la Fuente**² · **Virginia Ahedo**¹ · **María Pereda**³ · **José Ignacio Santos**¹
 
@@ -26,7 +23,7 @@ All authors are members of the Los Goonies research group (Group of Organization
 
 Before a genetic algorithm can select, cross over or mutate anything, someone has to decide how a solution is written down as a chromosome. That decision shapes which operators make sense, how many infeasible solutions appear and how easy the search turns out to be, yet most teaching material explains how the algorithm works and much less how a real problem becomes something it can operate on. This interactive tool shows, step by step and in Spanish or English, how four classic optimisation problems are formalised, encoded and decoded, and lets students change genes and see at once what solution they get, whether it is feasible and how good it is.
 
-It opens the series formed by [Selection](https://github.com/josemagalan/selection-ga), [Crossover](https://github.com/josemagalan/crossover-ga) and [Mutation in genetic algorithms](https://github.com/josemagalan/mutation-ga), with the same approach and interface. It runs entirely in the browser, with no build step and no server: open `index.html` or use the [live demo](https://josemagalan.github.io/representation-ga/).
+This tool is part of the five-module series on representation, initialisation and evaluation, selection, crossover and mutation, with a shared approach and interface. It runs entirely in the browser, with no build step and no server: open `index.html` or use the [live demo](https://josemagalan.github.io/representation-ga/).
 
 ## Problems and encodings
 
@@ -95,6 +92,26 @@ The tests check every encoding (worked examples and thousands of random cases co
 | `js/i18n.js`, `js/rng.js` | Spanish and English texts; seeded random generator |
 | `img/logos/`, `vendor/` | Institution logos; D3.js v7 |
 | `tests/` | Tests with `node:test` |
+
+<!-- ga-series-links:start -->
+## Teaching resources / Materiales docentes
+
+[Portal en español](https://josemagalan.github.io/genetic-algorithms-lab/?lang=es) · [Portal in English](https://josemagalan.github.io/genetic-algorithms-lab/?lang=en)
+
+| Resource / Recurso | Use or read / Usar o leer | Repository / Repositorio |
+| --- | --- | --- |
+| Portal / Índice de materiales | [Open / Abrir](https://josemagalan.github.io/genetic-algorithms-lab/) | [GitHub](https://github.com/josemagalan/genetic-algorithms-lab) |
+| Representation / Representación | [Open / Abrir](https://josemagalan.github.io/representation-ga/) | [GitHub](https://github.com/josemagalan/representation-ga) |
+| Initialisation and evaluation / Inicialización y evaluación | [Open / Abrir](https://josemagalan.github.io/initialization-and-evaluation-ga/) | [GitHub](https://github.com/josemagalan/initialization-and-evaluation-ga) |
+| Selection / Selección | [Open / Abrir](https://josemagalan.github.io/selection-ga/) | [GitHub](https://github.com/josemagalan/selection-ga) |
+| Crossover / Cruce | [Open / Abrir](https://josemagalan.github.io/crossover-ga/) | [GitHub](https://github.com/josemagalan/crossover-ga) |
+| Mutation / Mutación | [Open / Abrir](https://josemagalan.github.io/mutation-ga/) | [GitHub](https://github.com/josemagalan/mutation-ga) |
+| EvoTraveller | [Open / Abrir](https://evotraveller.streamlit.app/) | [GitHub](https://github.com/jismartin/evotraveller) |
+| SelectionMechanisms | [Open / Abrir](https://josemagalan.shinyapps.io/SelectionMechanisms/) | [GitHub](https://github.com/josemagalan/SelectionMechanisms) |
+| Learning handbook / Manual de aprendizaje | [Read / Leer](https://josemagalan.github.io/genetic-algorithms-lab-book/) | [GitHub](https://github.com/josemagalan/genetic-algorithms-lab-book) |
+
+El manual está en construcción: su contenido y estructura pueden cambiar. / The handbook is a work in progress: its content and structure may change.
+<!-- ga-series-links:end -->
 
 ## How to cite
 
