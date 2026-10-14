@@ -347,6 +347,7 @@
     });
     document.querySelectorAll('.lang button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang)));
     G.about.renderFooter(el.siteFoot, state.lang);
+    $('sisterInitialization').href = G.about.sisterUrl(state.lang, 'initialization');
     $('sisterSelection').href = G.about.sisterUrl(state.lang, 'selection');
     $('sisterCrossover').href = G.about.sisterUrl(state.lang, 'crossover');
     $('sisterMutation').href = G.about.sisterUrl(state.lang, 'mutation');

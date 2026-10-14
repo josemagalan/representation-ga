@@ -7,6 +7,7 @@
   const REPO = 'https://github.com/josemagalan/representation-ga';
   const VERSION = '0.9';       // beta pública; la 1.0 llegará tras la revisión docente del español
   const SISTERS = {
+    initialization: 'https://josemagalan.github.io/initialization-and-evaluation-ga/',
     selection: 'https://josemagalan.github.io/selection-ga/',
     crossover: 'https://josemagalan.github.io/crossover-ga/',
     mutation: 'https://josemagalan.github.io/mutation-ga/',
@@ -46,8 +47,8 @@
       citeTitle: 'Cómo citar',
       cite: 'Estamos preparando un artículo sobre esta herramienta para el Congreso de Ingeniería de Organización. Mientras tanto, si quieres citarla, ponte en contacto con los autores.',
       sisterTitle: 'Herramientas hermanas',
-      sister: 'Esta herramienta abre la serie «Algoritmos genéticos, paso a paso», de los mismos autores. Las otras tres muestran, con el mismo enfoque, los operadores que trabajan sobre la representación elegida:',
-      sisterLinks: { selection: 'Selección en algoritmos genéticos', crossover: 'Cruces en algoritmos genéticos', mutation: 'Mutación en algoritmos genéticos' },
+      sister: 'Esta herramienta abre la serie «Algoritmos genéticos, paso a paso», de los mismos autores. Las otras cuatro muestran, con el mismo enfoque, cómo se crea y se evalúa la población y los operadores que trabajan sobre la representación elegida:',
+      sisterLinks: { initialization: 'Inicialización y evaluación en algoritmos genéticos', selection: 'Selección en algoritmos genéticos', crossover: 'Cruces en algoritmos genéticos', mutation: 'Mutación en algoritmos genéticos' },
       codeTitle: 'Código y licencias',
       code: 'El código fuente está en GitHub. El código, incluidas las implementaciones en Python y JavaScript que se descargan desde la herramienta, se publica con licencia MIT; los textos docentes (explicaciones, formalizaciones, narración de los pasos y pseudocódigo), con licencia CC BY 4.0. D3.js tiene licencia ISC.',
       repo: 'Repositorio en GitHub',
@@ -56,7 +57,7 @@
       foot: 'Acerca de',
       footMoodle: 'Preguntas para Moodle',
       footSister: 'Herramientas hermanas:',
-      footSisters: { selection: 'selección', crossover: 'cruce', mutation: 'mutación' },
+      footSisters: { initialization: 'inicialización y evaluación', selection: 'selección', crossover: 'cruce', mutation: 'mutación' },
       footLicence: 'Código MIT · Textos CC BY 4.0',
     },
     en: {
@@ -71,8 +72,8 @@
       citeTitle: 'How to cite',
       cite: 'We are preparing a paper on this tool for the Congreso de Ingeniería de Organización (Spanish conference on industrial management and engineering). In the meantime, if you would like to cite it, please contact the authors.',
       sisterTitle: 'Sister tools',
-      sister: 'This tool opens the series “Genetic algorithms, step by step”, by the same authors. The other three use the same approach to show the operators that act on the chosen representation:',
-      sisterLinks: { selection: 'Selection in genetic algorithms', crossover: 'Crossover in genetic algorithms', mutation: 'Mutation in genetic algorithms' },
+      sister: 'This tool opens the series “Genetic algorithms, step by step”, by the same authors. The other four use the same approach to show how the population is created and evaluated and the operators that act on the chosen representation:',
+      sisterLinks: { initialization: 'Initialisation and evaluation in genetic algorithms', selection: 'Selection in genetic algorithms', crossover: 'Crossover in genetic algorithms', mutation: 'Mutation in genetic algorithms' },
       codeTitle: 'Code and licences',
       code: 'The source code is on GitHub. The code, including the Python and JavaScript implementations downloadable from the tool, is released under the MIT licence, and the teaching texts (explanations, formalisations, step narration and pseudocode) under CC BY 4.0. D3.js is ISC-licensed.',
       repo: 'GitHub repository',
@@ -81,12 +82,12 @@
       foot: 'About',
       footMoodle: 'Question banks for Moodle',
       footSister: 'Sister tools:',
-      footSisters: { selection: 'selection', crossover: 'crossover', mutation: 'mutation' },
+      footSisters: { initialization: 'initialisation and evaluation', selection: 'selection', crossover: 'crossover', mutation: 'mutation' },
       footLicence: 'Code MIT · Texts CC BY 4.0',
     },
   };
 
-  const SISTER_ORDER = ['selection', 'crossover', 'mutation'];
+  const SISTER_ORDER = ['initialization', 'selection', 'crossover', 'mutation'];
 
   function node(tag, cls, content) {
     const e = document.createElement(tag);

@@ -33,4 +33,9 @@ test('las herramientas hermanas enlazan a la serie con el idioma', () => {
   for (const k of ['selection', 'crossover', 'mutation']) {
     assert.match(about.sisterUrl('en', k), new RegExp(`^https://josemagalan\\.github\\.io/${k}-ga/#lang=en$`));
   }
+  assert.equal(about.sisterUrl('es', 'initialization'), 'https://josemagalan.github.io/initialization-and-evaluation-ga/#lang=es');
+  for (const l of ['es', 'en']) {
+    assert.deepEqual(Object.keys(about.text[l].sisterLinks), ['initialization', 'selection', 'crossover', 'mutation']);
+    assert.deepEqual(Object.keys(about.text[l].footSisters), ['initialization', 'selection', 'crossover', 'mutation']);
+  }
 });
