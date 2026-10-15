@@ -285,8 +285,11 @@
         st.result = result;
         snap('penalty', 5, variant === 'penalty-quadratic' ? 'penaltyQuadratic' : 'penaltyLinear',
           { value, lambda, e, pen: round2(p.penalty), fitness: round2(p.fitness) });
-        const beats = p.fitness > stats.optimum;
-        snap('penaltyCompare', 5, beats ? 'penaltyBeats' : 'penaltyBelow', { fitness: round2(p.fitness), opt: stats.optimum });
+        // Se compara la aptitud redondeada que se muestra, para que el empate no dependa del error de
+        // coma flotante (p. ej., λ = 0,1). El óptimo es entero.
+        const fit = round2(p.fitness);
+        const cmp = fit > stats.optimum ? 'penaltyBeats' : fit === stats.optimum ? 'penaltyTie' : 'penaltyBelow';
+        snap('penaltyCompare', 5, cmp, { fitness: fit, opt: stats.optimum });
       } else {
         const greedy = variant === 'repair-greedy';
         snap('repairIntro', 5, greedy ? 'repairIntroGreedy' : 'repairIntroRandom', { e });

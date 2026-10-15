@@ -124,3 +124,42 @@ test('el workflow de CI no empieza con BOM', () => {
   const buf = fs.readFileSync(path.join(ROOT, '.github', 'workflows', 'tests.yml'));
   assert.notDeepEqual([...buf.subarray(0, 3)], [0xef, 0xbb, 0xbf]);
 });
+
+// ---------- Mochila: empate entre la aptitud penalizada y la mejor factible (15 oct) ----------
+// Antes, si la aptitud de una infactible igualaba a la mejor factible, la narración decía «queda por
+// debajo» (avisado al escribir el capítulo 4 del libro, con λ = 1 y penalización cuadrática).
+
+const lastKey = (r) => r.steps[r.steps.length - 1].text.key;
+
+test('mochila: si la aptitud penalizada iguala a la mejor factible, la narración dice que empata', () => {
+  // Cuadrática, λ = 1: pesa 12 (e = 2), vale 24; 24 − (1 · 2)² = 20, que es el óptimo.
+  const q = { weights: [5, 5, 2, 9, 9], values: [10, 10, 4, 1, 1], capacity: 10 };
+  assert.equal(K.enumerate(q).optimum, 20);
+  const tie = K.run(q, [1, 1, 1, 0, 0], { variant: 'penalty-quadratic', lambda: 1 });
+  assert.equal(tie.result.fitness, 20);
+  assert.equal(lastKey(tie), 'penaltyTie');
+  assert.equal(lastKey(K.run(q, [1, 1, 1, 0, 0], { variant: 'penalty-quadratic', lambda: 0.9 })), 'penaltyBeats');
+  assert.equal(lastKey(K.run(q, [1, 1, 1, 0, 0], { variant: 'penalty-quadratic', lambda: 1.1 })), 'penaltyBelow');
+  // Lineal, λ = 1, en la instancia del test de λ pequeña: pesa 15 (e = 3), vale 18; 18 − 3 = 15.
+  const l = { weights: [3, 5, 2, 7, 4], values: [4, 6, 3, 8, 2], capacity: 12 };
+  assert.equal(lastKey(K.run(l, [1, 1, 0, 1, 0], { variant: 'penalty-linear', lambda: 1 })), 'penaltyTie');
+});
+
+test('mochila: el empate se decide con la aptitud que se muestra, no con el error de coma flotante', () => {
+  // λ = 1,1 y e = 50: 1,1 · 50 = 55,00000000000001, así que 115 − λ · e = 59,99999…, que se muestra como 60.
+  const inst = { weights: [50, 50, 60, 60, 60], values: [60, 55, 1, 1, 1], capacity: 50 };
+  assert.equal(K.enumerate(inst).optimum, 60);
+  const r = K.run(inst, [1, 1, 0, 0, 0], { variant: 'penalty-linear', lambda: 1.1 });
+  assert.ok(r.result.fitness < 60);
+  const step = r.steps[r.steps.length - 1];
+  assert.equal(step.text.key, 'penaltyTie');
+  assert.equal(step.text.params.fitness, 60);
+});
+
+test('mochila: la narración del empate existe en los dos idiomas y usa los mismos huecos', () => {
+  const nar = require('../js/content/knapsack-bits.js').narration;
+  for (const lang of ['es', 'en']) {
+    assert.match(nar[lang].penaltyTie, /\{fitness\}/);
+    assert.match(nar[lang].penaltyTie, /\{opt\}/);
+  }
+});
