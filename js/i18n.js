@@ -7,7 +7,7 @@
 
   const dict = {
     es: {
-      portalHome: 'Herramientas de algoritmos genéticos',
+      portalHome: 'Laboratorio de algoritmos genéticos',
       brand: 'Representación en algoritmos genéticos',
       homeTitleDoc: 'Representación de soluciones · Algoritmos genéticos',
       encTitleDoc: '{name} · Algoritmos genéticos',
@@ -430,7 +430,7 @@
       cmpRefs_function: 'Para saber más: Rothlauf (2006), sobre la localidad; Caruana y Schaffer (1988), sobre el código Gray y los saltos de Hamming, y Talbi (2009), sobre la representación de variables continuas.',
     },
     en: {
-      portalHome: 'Genetic algorithm tools',
+      portalHome: 'Genetic Algorithms Lab',
       brand: 'Representation in genetic algorithms',
       homeTitleDoc: 'Solution representation · Genetic algorithms',
       encTitleDoc: '{name} · Genetic algorithms',
