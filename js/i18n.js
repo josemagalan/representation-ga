@@ -8,6 +8,7 @@
   const dict = {
     es: {
       portalHome: 'Laboratorio de algoritmos genéticos',
+      bookChapter: 'Libro · capítulo 3',
       brand: 'Representación en algoritmos genéticos',
       homeTitleDoc: 'Representación de soluciones · Algoritmos genéticos',
       encTitleDoc: '{name} · Algoritmos genéticos',
@@ -431,6 +432,7 @@
     },
     en: {
       portalHome: 'Genetic Algorithms Lab',
+      bookChapter: 'Book · chapter 3 (Spanish)',
       brand: 'Representation in genetic algorithms',
       homeTitleDoc: 'Solution representation · Genetic algorithms',
       encTitleDoc: '{name} · Genetic algorithms',
