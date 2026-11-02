@@ -432,7 +432,7 @@
     },
     en: {
       portalHome: 'Genetic Algorithms Lab',
-      bookChapter: 'Book · chapter 3 (Spanish)',
+      bookChapter: 'Book · chapter 3',
       brand: 'Representation in genetic algorithms',
       homeTitleDoc: 'Solution representation · Genetic algorithms',
       encTitleDoc: '{name} · Genetic algorithms',
