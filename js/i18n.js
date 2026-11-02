@@ -9,6 +9,7 @@
     es: {
       portalHome: 'Laboratorio de algoritmos genéticos',
       bookChapter: 'Libro · capítulo 3',
+      controlsTitle: 'Controles',
       brand: 'Representación en algoritmos genéticos',
       homeTitleDoc: 'Representación de soluciones · Algoritmos genéticos',
       encTitleDoc: '{name} · Algoritmos genéticos',
@@ -433,6 +434,7 @@
     en: {
       portalHome: 'Genetic Algorithms Lab',
       bookChapter: 'Book · chapter 3',
+      controlsTitle: 'Controls',
       brand: 'Representation in genetic algorithms',
       homeTitleDoc: 'Solution representation · Genetic algorithms',
       encTitleDoc: '{name} · Genetic algorithms',
